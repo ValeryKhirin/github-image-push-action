@@ -13,7 +13,9 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Build Docker image
-      run: docker build -t valerykhirin/github-image-push-actions:latest .
+      run: |
+        docker build -t valerykhirin/github-image-push-actions:latest .
+        echo "Image built!"
 
     - name: Run Snyk to check Docker image for vulnerabilities
       continue-on-error: true
@@ -31,14 +33,6 @@ jobs:
         password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
     - name: Push Docker image
-      run: docker push valerykhirin/github-image-push-actions:latest
-
-    #- name: Build and Push Docker Image
-    #  if: github.event.pull_request.merged == true
-    #  uses: docker/build-push-action@v4
-    #  with:
-    #    context: .
-    #    push: true
-    #    tags: |
-    #      valerykhirin/github-image-push-actions:latest
-    #      valerykhirin/github-image-push-actions:1.0.0
+      run: |
+        docker push valerykhirin/github-image-push-actions:latest
+        echo "Image is pushed to docker hub with the tag latest"
