@@ -24,4 +24,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: valerykhirin/github-image-push-actions:latest
+        tags: valerykhirin/github-image-push-actions:${{ steps.versioning.outputs.tag }}
