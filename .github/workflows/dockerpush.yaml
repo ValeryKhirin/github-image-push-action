@@ -12,6 +12,9 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v1
 
+    - name: Build Docker image
+      run: docker build -t valerykhirin/github-image-push-actions:latest .
+
     - name: Run Snyk to check Docker image for vulnerabilities
       continue-on-error: true
       uses: snyk/actions/docker@master
@@ -27,12 +30,16 @@ jobs:
         username: "${{ secrets.DOCKERHUB_USERNAME }}"
         password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
-    - name: Build and Push Docker Image
-      if: github.event.pull_request.merged == true
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: |
-          valerykhirin/github-image-push-actions:latest
-          valerykhirin/github-image-push-actions:1.0.0
+    - name: Push Docker image
+      if: github.event.pull_requst.merged == true
+      run: docker push valerykhirin/github-image-push-actions:latest
+
+    #- name: Build and Push Docker Image
+    #  if: github.event.pull_request.merged == true
+    #  uses: docker/build-push-action@v4
+    #  with:
+    #    context: .
+    #    push: true
+    #    tags: |
+    #      valerykhirin/github-image-push-actions:latest
+    #      valerykhirin/github-image-push-actions:1.0.0
