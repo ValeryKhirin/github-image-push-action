@@ -31,7 +31,6 @@ jobs:
         password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
     - name: Push Docker image
-      if: github.event.pull_requst.merged == true
       run: docker push valerykhirin/github-image-push-actions:latest
 
     #- name: Build and Push Docker Image
