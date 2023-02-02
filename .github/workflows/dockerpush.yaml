@@ -25,3 +25,4 @@ jobs:
         context: .
         push: true
         tags: valerykhirin/github-actions:latest
+#########################
