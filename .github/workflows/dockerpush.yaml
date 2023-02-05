@@ -32,22 +32,11 @@ jobs:
         image: valerykhirin/github-image-push-actions:latest
         args: --severity-threshold=high
 
-    - name: Comment on pull request with scan results
+    - name: Create comment
       uses: peter-evans/create-or-update-comment@v2
-      if: always()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         body: |
-          {{#if vulnerabilityCount}}
-          **Snyk scan found vulnerabilities:**
-
-          {{vulnerabilityCount}} vulnerability{{#if vulnerabilityCount}}s{{/if}} found
-
-          For more details, see the [Snyk report]({{reportUrl}}).
-          {{else}}
-          No vulnerabilities found in the Snyk scan.
-          {{/if}}
+          This is a test comment
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
