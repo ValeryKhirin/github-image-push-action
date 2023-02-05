@@ -31,7 +31,10 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: valerykhirin/github-image-push-actions:latest
-        args: --severity-threshold=high
+        args: |
+          --severity-threshold=high
+          --file=Dockerfile
+        json: true
 
     - name: Check if PR is merged
       if: github.event.pull_request.merged == true
@@ -41,7 +44,7 @@ jobs:
       uses: thollander/actions-comment-pull-request@v1
       with:
         message: |
-          Hello world!
+          snyk.json
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Login to Docker Hub
