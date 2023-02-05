@@ -43,7 +43,7 @@ jobs:
     - name: Comment PR
       uses: thollander/actions-comment-pull-request@v1
       with:
-        filePath: ./snyk.json
+        filePath: snyk.json
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Login to Docker Hub
