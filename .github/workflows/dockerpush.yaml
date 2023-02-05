@@ -32,10 +32,22 @@ jobs:
         image: valerykhirin/github-image-push-actions:latest
         args: --severity-threshold=high
 
-    - name: Upload result to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v2
+    - name: Comment on pull request with scan results
+      uses: peter-evans/create-or-update-pull-request-comment@v2
+      if: always()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        sarif_file: snyk.sarif
+        body: |
+          {{#if vulnerabilityCount}}
+          **Snyk scan found vulnerabilities:**
+
+          {{vulnerabilityCount}} vulnerability{{#if vulnerabilityCount}}s{{/if}} found
+
+          For more details, see the [Snyk report]({{reportUrl}}).
+          {{else}}
+          No vulnerabilities found in the Snyk scan.
+          {{/if}}
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
