@@ -33,7 +33,7 @@ jobs:
         args: --severity-threshold=high
 
     - name: Comment on pull request with scan results
-      uses: peter-evans/create-or-update-pull-request-comment@v2
+      uses: peter-evans/create-or-update-comment@v2
       if: always()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
