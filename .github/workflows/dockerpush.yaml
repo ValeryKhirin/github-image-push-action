@@ -33,10 +33,10 @@ jobs:
         args: --severity-threshold=high
 
     - name: Create comment
-      uses: peter-evans/create-or-update-comment@v2
+      uses: github-actions-up-and-running/pr-comment@v1.0.0
       with:
-        body: |
-          This is a test comment
+        repo-token: ${{ sevrets.GITHUB_TOKEN }}
+        message: NICE PR!
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
