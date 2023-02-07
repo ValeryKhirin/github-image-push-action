@@ -49,40 +49,6 @@ jobs:
         with:
           name: snyk-results
 
-      - name: Comment on Pull Request with Snyk results
-        uses: docker://docker.pkg.github.com/actions/github-script:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          script: |
-            const { octokit } = require('@actions/github');
-            const fs = require('fs');
-
-            async function run() {
-              const snykResults = fs.readFileSync('snyk-results.json');
-              const octokit = new octokit();
-
-              // Get the pull request number
-              const pullRequest = octokit.context.payload.pull_request;
-              if (!pullRequest) {
-                console.log('This action only works in pull requests');
-                return;
-              }
-              const pullRequestNumber = pullRequest.number;
-
-              // Create the comment
-              const comment = `Snyk Scan Results:\n\`\`\`json\n${snykResults.toString()}\n\`\`\``;
-              await octokit.issues.createComment({
-                owner: octokit.context.repo.owner,
-                repo: octokit.context.repo.repo,
-                issue_number: pullRequestNumber,
-                body: comment,
-              });
-            }
-
-            run();
-
-
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1
         with:
