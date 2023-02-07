@@ -31,18 +31,16 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: valerykhirin/github-image-push-actions:latest
+          json: true
           args: |
             --severity-threshold=high
             --file=Dockerfile
-
-      - name: Save snyk results to JSON
-        run: snyk test --json > snyk-results.json
 
       - name: Upload Snyk results as artifact
         uses: actions/upload-artifact@v2
         with:
           name: snyk-results
-          path: snyk-results.json
+          path: snyk.json
 
       - name: Download Snyk results artifact
         uses: actions/download-artifact@v2
