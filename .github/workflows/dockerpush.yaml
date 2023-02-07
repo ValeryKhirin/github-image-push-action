@@ -37,13 +37,13 @@ jobs:
             --file=Dockerfile
 
       - name: Upload Snyk results as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: snyk-results
-          path: ./snyk.json
+          path: snyk.json
 
       - name: Download Snyk results artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: snyk-results
 
