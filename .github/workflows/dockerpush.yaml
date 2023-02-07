@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: snyk-results
-          path: snyk.json
+          path: ./snyk.json
 
       - name: Download Snyk results artifact
         uses: actions/download-artifact@v2
