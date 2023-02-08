@@ -46,7 +46,7 @@ jobs:
       #     name: snyk-results
 
       - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v1
+        uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: snyk.json
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
