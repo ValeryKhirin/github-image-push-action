@@ -45,10 +45,16 @@ jobs:
       #   with:
       #     name: snyk-results
 
+      - name: Extract Snyk scan summary
+        uses: sergeysova/jq-action@v2
+        id: summary
+        with:
+          cmd: 'jq .summary snyk.json -r'
+
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          filePath: snyk.json
+          message: ${{ steps.summary.outputs.value }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
