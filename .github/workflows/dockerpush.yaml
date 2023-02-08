@@ -34,22 +34,13 @@ jobs:
           json: true
           args: --severity-threshold=high
 
-      # - name: Upload Snyk results as artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: snyk-results
-      #     path: snyk.json
-
-      # - name: Download Snyk results artifact
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: snyk-results
-
       - name: Extract Snyk scan summary
         uses: sergeysova/jq-action@v2
         id: summary
         with:
-          cmd: 'jq .summary snyk.json -r'
+          cmd: |
+            'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
+            'jq .summary snyk.json -r'
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
