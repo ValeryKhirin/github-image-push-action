@@ -34,21 +34,21 @@ jobs:
           json: true
           args: --severity-threshold=high
 
-      - name: Upload Snyk results as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: snyk-results
-          path: snyk.json
+      # - name: Upload Snyk results as artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: snyk-results
+      #     path: snyk.json
 
-      - name: Download Snyk results artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: snyk-results
+      # - name: Download Snyk results artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: snyk-results
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: Hello from Valery workflow
+          filePath: snyk.json
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
