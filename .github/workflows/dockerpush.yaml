@@ -32,9 +32,7 @@ jobs:
         with:
           image: valerykhirin/github-image-push-actions:latest
           json: true
-          args: |
-            --severity-threshold=high
-            --file=Dockerfile
+          args: --severity-threshold=high
 
       - name: Upload Snyk results as artifact
         uses: actions/upload-artifact@v3
