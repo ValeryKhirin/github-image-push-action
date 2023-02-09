@@ -35,7 +35,7 @@ jobs:
         with:
           image: valerykhirin/github-image-push-actions:latest
           json: true
-          args: --severity-threshold=low
+          args: --severity-threshold=high
 
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
