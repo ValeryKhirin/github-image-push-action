@@ -13,6 +13,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v1
 
+      - name: Update machine
+        run: sudo yum update
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
@@ -32,7 +35,7 @@ jobs:
         with:
           image: valerykhirin/github-image-push-actions:latest
           json: true
-          args: --severity-threshold=low
+          args: --severity-threshold=high
 
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
@@ -49,10 +52,9 @@ jobs:
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          filePath: snyk.json
-          # message: |
-          #   SNYK scan results: \
-          #   ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
+          message: |
+            SNYK scan results: \
+            ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
