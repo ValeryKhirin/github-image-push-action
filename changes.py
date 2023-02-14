@@ -28,7 +28,6 @@ if folder_changed:
 
     # Get the contents of the folder at the latest commit
     latest_contents = repo.get_contents(".github/workflows", ref=repo.default_branch)
-    print(latest_contents)
 
     # Compare the contents of the folder at the latest commit to the current contents
     for item in latest_contents:
@@ -36,3 +35,4 @@ if folder_changed:
             print(f"{item.path} has changed.")
 else:
     print("There were no changes in .github/workflows folder.")
+
