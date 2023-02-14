@@ -20,7 +20,10 @@ merge_commit_sha = repo.get_branch(default_branch).commit.commit.tree.sha
 
 
 # Get the contents of the .github/workflows folder
-workflows = repo.get_contents(".github/workflows")
+try:
+    workflows = repo.get_contents(".github/workflows")
+except Exception as e:
+    print("There are no workflows added to this repository")
 
 # Check if any of the contents of the folder have changed
 folder_changed = False
