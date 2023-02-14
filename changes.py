@@ -2,12 +2,13 @@
 
 import sys
 from github import Github
+import os
 
 # Get the repository name from the command line arguments
 repo_name = sys.argv[1]
 
 # Set up the GitHub API client
-access_token = "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"
+access_token = os.environ.get('ACCESS_TOKEN')
 g = Github(access_token)
 
 # Get the repository
