@@ -7,7 +7,7 @@ from github import Github
 repo_name = sys.argv[1]
 
 # Set up the GitHub API client
-access_token = "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"
+access_token = "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"
 g = Github(access_token)
 
 # Get the repository
