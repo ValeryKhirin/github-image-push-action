@@ -1,4 +1,3 @@
-import os
 import sys
 from github import Github
 
@@ -6,7 +5,7 @@ from github import Github
 repo_name = sys.argv[1]
 
 # Set up the GitHub API client
-access_token = "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"
+access_token = "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"
 g = Github(access_token)
 
 # Get the repository
@@ -17,22 +16,16 @@ workflows = repo.get_contents(".github/workflows")
 
 # Check if any of the contents of the folder have changed
 folder_changed = False
+changed_files = []
 for item in workflows:
     if item.sha != repo.get_commit(repo.default_branch).commit.tree.sha:
         folder_changed = True
-        break
+        changed_files.append(item.path)
 
-# Print a message indicating if the folder has changed or not
+# Print a message indicating whether or not changes were detected, and show what changed
 if folder_changed:
-    print("There were changes in .github/workflows folder.")
-
-    # Get the contents of the folder at the latest commit
-    latest_contents = repo.get_contents(".github/workflows", ref=repo.default_branch)
-
-    # Compare the contents of the folder at the latest commit to the current contents
-    for item in latest_contents:
-        if item.sha != item.sha:
-            print(f"{item.path} has changed.")
+    print("Changes were detected in the .github/workflows folder:")
+    print('\n'.join(changed_files))
 else:
-    print("There were no changes in .github/workflows folder.")
+    print("No changes were detected in the .github/workflows folder.")
 
