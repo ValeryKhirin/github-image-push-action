@@ -63,6 +63,4 @@ jobs:
       - name: Push Docker image
         run: |
           docker push valerykhirin/github-image-push-actions:latest
-          echo "Image is pushed to docker hub with the tag latestt
-
-######################################33
+          echo "Image is pushed to docker hub with the tag latest"
