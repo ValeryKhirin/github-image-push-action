@@ -64,8 +64,3 @@ jobs:
         run: |
           docker push valerykhirin/github-image-push-actions:latest
           echo "Image is pushed to docker hub with the tag latest"
-
-      - name: run .py file
-        run: python3 changes.py valerykhirin/github-image-push-action
-        env:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
