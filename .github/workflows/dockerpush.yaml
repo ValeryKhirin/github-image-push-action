@@ -63,7 +63,7 @@ jobs:
 
       - name: Show description
         id: description
-        run: echo "${{ steps.vulnerability.outputs.value }}"
+        run: printf '%s' '"${{ steps.vulnerability.outputs.value }}"'
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
