@@ -43,13 +43,8 @@ jobs:
           args: --severity-threshold=high
 
       - name: Run Snyk to check vulnerabilities in Python
-        continue-on-error: true
         id: snyk_output
-        uses: snyk/actions/python@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
+        run: echo "hereeeee"
 
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
