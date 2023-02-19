@@ -58,7 +58,7 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: vulnerability
         with:
-          cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
+          cmd: 'jq .remediation.unresolved[0].description snyk.json -r'
           multiline: true   
 
       - name: Comment PR
