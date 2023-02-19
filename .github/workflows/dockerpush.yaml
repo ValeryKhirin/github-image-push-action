@@ -40,7 +40,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-#          json: true
+          json: true
           args: --severity-threshold=high
 
       - name: Extract Snyk scan status
