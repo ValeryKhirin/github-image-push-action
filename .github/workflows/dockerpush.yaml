@@ -63,9 +63,7 @@ jobs:
 
       - name: Show description
         id: description
-        run: |
-          description="${{ steps.vulnerability.outputs.value }}"
-          echo $description | sed 's/%0A/\n/g'
+        run: echo "${{ steps.vulnerability.outputs.value }}" | sed 's/%0A/\n/g'
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
