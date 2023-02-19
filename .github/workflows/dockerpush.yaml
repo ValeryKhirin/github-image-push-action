@@ -65,7 +65,7 @@ jobs:
         id: description
         run: |
           description="${{ steps.vulnerability.outputs.value }}"
-          for desc in $description; do
+          IFS=$'\n' for desc in $description; do
             echo "$desc"
           done
 
