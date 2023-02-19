@@ -54,11 +54,11 @@ jobs:
         with:
           cmd: 'jq .summary snyk.json -r'
 
-      - name: Extract Snyk scan remediation
+      - name: Extract Snyk scan vulnerability
         uses: sergeysova/jq-action@v2
-        id: remediation
+        id: vulnerability
         with:
-          cmd: 'jq .remidiation snyk.json -r'
+          cmd: 'jq .vulnerabilities[0].from snyk.json -r'
           multiline: true     
 
       - name: Comment PR
