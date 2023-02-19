@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Snyk to check vulnerabilities in Python
         continue-on-error: true
-        uses: snyk/actions/python@master
+        uses: snyk/actions/pythons@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -58,9 +58,10 @@ jobs:
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: |
-            SNYK scan results: \
-            ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
+          # message: |
+          #   SNYK scan results: \
+          #   ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
+          filepath: snyk.json
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
