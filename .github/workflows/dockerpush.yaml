@@ -61,7 +61,7 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: snyk_description
         with:
-          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ""; else echo "${{ steps.snyk_output.outputs.value }}"; fi
+          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ""; else echo "${{ steps.snyk_output.outputs }}"; fi
 
       - name: Extract Snyk scan summary
         uses: sergeysova/jq-action@v2
