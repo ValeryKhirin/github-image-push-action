@@ -58,7 +58,7 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: vulnerability
         with:
-          cmd: 'jq .vulnerabilities[0].from snyk.json -r'
+          cmd: 'jq .vulnerabilities[0].pin snyk.json -r'
           multiline: true     
 
       - name: Comment PR
@@ -67,7 +67,7 @@ jobs:
           message: |
             SNYK scan results: \
             ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
-            ${{ steps.remidiation.outputs.value }}
+            ${{ steps.vulnerability.outputs.value }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
