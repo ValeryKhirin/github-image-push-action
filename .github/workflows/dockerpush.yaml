@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
@@ -42,24 +42,25 @@ jobs:
           json: true
           args: --severity-threshold=high
 
-      - name: Extract Snyk scan status
-        uses: sergeysova/jq-action@v2
-        id: snyk_success
-        with:
-          cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
+      # - name: Extract Snyk scan status
+      #   uses: sergeysova/jq-action@v2
+      #   id: snyk_success
+      #   with:
+      #     cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
 
-      - name: Extract Snyk scan summary
-        uses: sergeysova/jq-action@v2
-        id: summary
-        with:
-          cmd: 'jq .summary snyk.json -r'
+      # - name: Extract Snyk scan summary
+      #   uses: sergeysova/jq-action@v2
+      #   id: summary
+      #   with:
+      #     cmd: 'jq .summary snyk.json -r'
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: |
-            SNYK scan results: \
-            ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
+          filePath: snyk.json
+          # message: |
+          #   SNYK scan results: \
+          #   ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
