@@ -42,26 +42,11 @@ jobs:
           json: true
           args: --severity-threshold=high
 
-      - name: Run Snyk to check vulnerabilities in Python
-        continue-on-error: true
-        id: snyk_output
-        uses: snyk/actions/python@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
-
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
         id: snyk_success
         with:
-          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi
-
-      - name: Extract Snyk description
-        uses: sergeysova/jq-action@v2
-        id: snyk_description
-        with:
-          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ""; else echo "${{ steps.snyk_output.outputs.result }}"; fi
+          cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
 
       - name: Extract Snyk scan summary
         uses: sergeysova/jq-action@v2
@@ -69,13 +54,19 @@ jobs:
         with:
           cmd: 'jq .summary snyk.json -r'
 
+      - name: Extract Snyk scan vulnerability
+        uses: sergeysova/jq-action@v2
+        id: vulnerability
+        with:
+          cmd: 'jq .vulnerabilities[0].id snyk.json -r'    
+
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             SNYK scan results: \
             ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
-            ${{ steps.snyk_description.outputs.value }}
+            ${{ steps.vulnerability.outputs.value }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
