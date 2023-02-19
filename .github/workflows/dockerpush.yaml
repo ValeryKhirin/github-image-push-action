@@ -65,9 +65,7 @@ jobs:
         id: description
         run: |
           description="${{ steps.vulnerability.outputs.value }}"
-          IFS=$'\n' for desc in $description; do
-            echo "$desc"
-          done
+          echo $description | sed 's/%0A/\n/g'
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
