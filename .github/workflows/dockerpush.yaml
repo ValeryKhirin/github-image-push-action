@@ -24,19 +24,19 @@ jobs:
           docker build -t valerykhirin/github-image-push-actions:latest .
           echo "Image built!"
 
-      - name: Run Snyk to check Docker image for vulnerabilities
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: valerykhirin/github-image-push-actions:latest
-          json: true
-          args: --severity-threshold=high
+      # - name: Run Snyk to check Docker image for vulnerabilities
+      #   continue-on-error: true
+      #   uses: snyk/actions/docker@master
+      #   env:
+      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      #   with:
+      #     image: valerykhirin/github-image-push-actions:latest
+      #     json: true
+      #     args: --severity-threshold=high
 
       - name: Run Snyk to check vulnerabilities in Python
         continue-on-error: true
-        uses: snyk/actions/python@master
+        uses: snyk/actions/python-3.7@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
