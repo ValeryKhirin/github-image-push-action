@@ -49,8 +49,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high
-          command: monitor >> $GITHUB_OUTPUT
+          command: monitor --severity-threshold=high >> $GITHUB_OUTPUT
 
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
