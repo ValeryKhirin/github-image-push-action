@@ -43,20 +43,25 @@ jobs:
           args: --severity-threshold=high
 
       - name: Run Snyk to check vulnerabilities in Python
+        continue-on-error: true
         id: snyk_output
-        run: echo "hereeeee"
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
 
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
         id: snyk_success
         with:
-          cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
+          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi
 
       - name: Extract Snyk description
         uses: sergeysova/jq-action@v2
         id: snyk_description
         with:
-          cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ""; else echo "${{ steps.snyk_output.outputs.value }}"; fi'
+          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ""; else echo "${{ steps.snyk_output.outputs.value }}"; fi
 
       - name: Extract Snyk scan summary
         uses: sergeysova/jq-action@v2
