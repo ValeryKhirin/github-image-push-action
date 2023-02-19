@@ -49,7 +49,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: monitor --severity-threshold=high >> $GITHUB_OUTPUT
+          args: --severity-threshold=high
 
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
@@ -61,7 +61,7 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: snyk_description
         with:
-          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ""; else echo "${{ steps.snyk_output.outputs }}"; fi
+          cmd: if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ""; else echo "${{ steps.snyk_output.outputs.result }}"; fi
 
       - name: Extract Snyk scan summary
         uses: sergeysova/jq-action@v2
