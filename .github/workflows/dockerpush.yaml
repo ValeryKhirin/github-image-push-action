@@ -58,7 +58,7 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: remediation
         with:
-          cmd: 'jq .remidiation snyk.json -r'      
+          cmd: 'jq .remidiation.pin snyk.json -r'      
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
