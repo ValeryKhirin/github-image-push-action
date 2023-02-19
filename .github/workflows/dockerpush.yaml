@@ -61,6 +61,14 @@ jobs:
           cmd: 'jq .remediation.unresolved[0].description snyk.json -r'
           multiline: true   
 
+      - name: Show description
+        id: description
+        run: |
+          description="${{ steps.vulnerability.outputs.value }}"
+          for desc in $description; do
+            echo "$desc"
+          done
+
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
@@ -68,7 +76,7 @@ jobs:
             SNYK scan results: \
             ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
             ```markdown
-            ${{ steps.vulnerability.outputs.value }}
+            ${{ steps.description.outputs.value }}
             ```
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
