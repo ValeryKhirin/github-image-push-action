@@ -40,7 +40,6 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: valerykhirin/github-image-push-actions:latest
           json: true
           args: --severity-threshold=high
 
