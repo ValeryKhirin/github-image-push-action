@@ -41,7 +41,9 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           json: true
-          args: --severity-threshold=high
+          args: |
+            --severity-threshold=high
+            --workdir=valerykhirin/github-image-push-actions
 
       - name: Extract Snyk scan status
         uses: sergeysova/jq-action@v2
