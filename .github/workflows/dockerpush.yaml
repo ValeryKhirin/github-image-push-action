@@ -61,19 +61,13 @@ jobs:
           cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
           multiline: true
 
-      - name: Descripton to html
-        id: to_html  
-        uses: lifepal/markdown-to-html@v1.1
-        with:
-          text: ${{ steps.vulnerability.outputs.body }}
-
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             SNYK scan results: \
             ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
-            ${{ steps.to_html.outputs.value }}
+            ${{ steps.vulnerability.outputs.body }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
