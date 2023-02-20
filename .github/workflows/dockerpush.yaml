@@ -59,10 +59,7 @@ jobs:
         id: vulnerability
         with:
           cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
-          multiline: true 
-
-      - name: Extract the remediation
-        run: echo (${{ steps.vulnerability.outputs.value }} | grep -Po 'Remediation\s+(.*?\.)') 
+          multiline: true  
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
