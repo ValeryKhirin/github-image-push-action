@@ -63,11 +63,9 @@ jobs:
 
       - name: Descripton to html
         id: to_html  
-        uses: repolevedavaj/github-markdown-to-html@master
+        uses: lifepal/markdown-to-html@v1.1
         with:
           text: ${{ steps.vulnerability.outputs.body }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
