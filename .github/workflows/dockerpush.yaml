@@ -62,7 +62,7 @@ jobs:
           multiline: true 
 
       - name: Extract the remediation
-        run: echo $(grep -Po 'Remediation\s+(.*?\.)' ${{ steps.vulnerability.outputs.value }}) 
+        run: echo (${{ steps.vulnerability.outputs.value }} | grep -Po 'Remediation\s+(.*?\.)') 
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
