@@ -58,11 +58,8 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: vulnerability
         with:
-          run: |
-            'jq .vulnerabilities[0].title snyk.json -r'
-            'jq .vulnerabilities[0].id snyk.json -r'
-            'jq .vulnerabilities[0].version snyk.json -r'    
-            'jq .vulnerabilities[0].fixedIn snyk.json -r'
+          cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
+          multiline: true   
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
