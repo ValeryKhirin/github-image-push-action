@@ -63,7 +63,7 @@ jobs:
 
       - name: Descripton to html
         id: to_html  
-        uses: repolevedavaj/github-markdown-to-html@v1
+        uses: repolevedavaj/github-markdown-to-html@master
         with:
           text: ${{ steps.vulnerability.outputs.body }}
         env:
