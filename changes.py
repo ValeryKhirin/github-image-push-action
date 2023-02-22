@@ -14,7 +14,10 @@ g = Github(access_token)
 
 repo = g.get_repo(repo_name)
 pulls = repo.get_pulls(state='closed')
-pr = repo.get_pull(pulls.get_page(0)[0].number)
+i = 0
+while not pulls.get_page(0)[i].merged:
+    i += 1  
+pr = repo.get_pull(pulls.get_page(0)[i].number)
 
 commits = pr.get_commits()
 for commit in commits:
