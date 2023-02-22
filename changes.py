@@ -28,6 +28,7 @@ for commit in commits:
         if regex.match(filename):
             there_is_a_change = True
             print("There was a change in the YAML file --> " + filename + " since the last merge")
+            print("The last merge was on pull request number: " + str(pr.number))
 
 if not there_is_a_change:
     print("There was no change in the YAML file since the last merge!")

@@ -5,7 +5,7 @@ on:
     types: [closed]
 
 jobs:
-  build:
+  scan:
     permissions: write-all
     runs-on: ubuntu-latest
 
