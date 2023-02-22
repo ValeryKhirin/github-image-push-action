@@ -34,3 +34,4 @@ if not there_is_a_change:
     print("There was no change in the YAML file since the last merge!")
     print("The last merge was on pull request number: " + str(pr.number))
 
+
