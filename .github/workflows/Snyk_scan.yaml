@@ -49,5 +49,3 @@ jobs:
             ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
             ${{ steps.description.outputs.value }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          ####
