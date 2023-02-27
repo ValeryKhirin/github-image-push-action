@@ -1,0 +1,9 @@
+# These owners will be the default owners for everything in
+# the repo.
+* @ValeryKhirin
+
+#html files
+/html/* @ValeryKhirin
+
+#specific files
+changes.py @ValeryKhirin
