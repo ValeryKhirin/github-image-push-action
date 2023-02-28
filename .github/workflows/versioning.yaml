@@ -24,10 +24,18 @@ jobs:
             version="1.1.0"
           elif [[ "$GITHUB_REF_SLUG" =~ ^release/.*$ ]]; then
             version="2.0.0"
+          else
+            echo "Skipping branch with name $GITHUB_REF_SLUG"
+            exit 0
           fi
         
-          git config --global user.email "valeryk@bynet.co.il"
-          git config --global user.name "ValeryKhirin"
-        
-          git tag "$version"
-          git push origin "$version"
+          if [[ -n "$version" ]]; then
+            git config --global user.email "valeryk@bynet.co.il"
+            git config --global user.name "ValeryKhirin"
+          
+            git tag "$version"
+            git push origin "$version"
+          else
+            echo "Skipping tag creation for branch $GITHUB_REF_SLUG"
+            exit 0
+          fi
