@@ -42,3 +42,4 @@ jobs:
           TAG=$(cat VERSION)
           git tag "$TAG"
           git push origin "$TAG"
+#
