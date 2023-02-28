@@ -4,6 +4,7 @@ on:
     types: [closed]
 jobs:
   update_version:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,5 +32,6 @@ jobs:
       
       - name: Update version number
         run: |
+          echo "ls -la ../../"
           # Replace this command with the one that fits your project setup
           awk -v old="$CURRENT_VERSION" -v new="$NEW_VERSION" '{gsub(old,new)}1' ../../version.txt > tmpfile && mv tmpfile ../../version.txt
