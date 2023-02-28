@@ -1,14 +1,37 @@
-name: Versioning
+name: Semantic Versioning
 
 on:
   pull_request:
     types: [closed]
+    branches:
+      - 'patch*'
+      - 'feature*'
+      - 'release*'
 
 jobs:
-  scan:
+  semantic-versioning:
     permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Determine version
+        run: |
+          if [[ "$GITHUB_REF" =~ ^refs/heads/patch.* ]]; then
+            # Increase patch version
+            echo "Patch version update"
+            # Your command to increase patch version
+          elif [[ "$GITHUB_REF" =~ ^refs/heads/feature.* ]]; then
+            # Increase minor version
+            echo "Minor version update"
+            # Your command to increase minor version
+          elif [[ "$GITHUB_REF" =~ ^refs/heads/release.* ]]; then
+            # Increase major version
+            echo "Major version update"
+            # Your command to increase major version
+          else
+            echo "No version update needed"
