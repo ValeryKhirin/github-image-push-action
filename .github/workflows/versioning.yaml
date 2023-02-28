@@ -33,7 +33,7 @@ jobs:
       
       - name: Update version number
         run: |
-          awk -v old="$CURRENT_VERSION" -v new="$NEW_VERSION" '{gsub(old,new)}1' version.txt > tmpfile && mv tmpfile version.txt
+          awk -v old="$CURRENT_VERSION" -v new="$NEW_VERSION" '{gsub(old,new)}1' VERSION > tmpfile && mv tmpfile VERSION
 
       - name: Create tag
         run: |
