@@ -3,10 +3,6 @@ name: Semantic Versioning
 on:
   pull_request:
     types: [closed]
-    branches:
-      - 'patch*'
-      - 'feature*'
-      - 'release*'
 
 jobs:
   semantic-versioning:
@@ -16,22 +12,22 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
 
-      - name: Determine version
+      - name: Add Version
+        if: github.event.pull_request.merged == true
+        env:
+          GITHUB_REF_SLUG: ${{ github.event.pull_request.head.ref }}
         run: |
-          if [[ "$GITHUB_REF" =~ ^refs/heads/patch.* ]]; then
-            # Increase patch version
-            echo "Patch version update"
-            # Your command to increase patch version
-          elif [[ "$GITHUB_REF" =~ ^refs/heads/feature.* ]]; then
-            # Increase minor version
-            echo "Minor version update"
-            # Your command to increase minor version
-          elif [[ "$GITHUB_REF" =~ ^refs/heads/release.* ]]; then
-            # Increase major version
-            echo "Major version update"
-            # Your command to increase major version
-          else
-            echo "No version update needed"
+          if [[ "$GITHUB_REF_SLUG" =~ ^patch/.*$ ]]; then
+            version="1.0.1"
+          elif [[ "$GITHUB_REF_SLUG" =~ ^feature/.*$ ]]; then
+            version="1.1.0"
+          elif [[ "$GITHUB_REF_SLUG" =~ ^release/.*$ ]]; then
+            version="2.0.0"
+          fi
+        
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/releases \
+            -d "{\"tag_name\": \"$version\", \"name\": \"Version $version\"}"
