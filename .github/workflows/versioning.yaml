@@ -26,8 +26,8 @@ jobs:
             NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$1++; print}')
           fi
 
-          # Set the new version number as an environment variable
-          echo "::set-env name=NEW_VERSION::$NEW_VERSION"
+          # # Set the new version number as an environment variable
+          # echo "::set-env name=NEW_VERSION::$NEW_VERSION"
       
       - name: Update version number
         run: |
