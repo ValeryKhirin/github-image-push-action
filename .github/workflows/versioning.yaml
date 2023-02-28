@@ -32,4 +32,4 @@ jobs:
       - name: Update version number
         run: |
           # Replace this command with the one that fits your project setup
-          sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" version.txt
+          sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" ../../version.txt
