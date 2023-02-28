@@ -1,55 +1,35 @@
-name: Semantic Versioning
-
+name: Versioning Workflow
 on:
   pull_request:
     types: [closed]
-    branches:
-      - main
-
 jobs:
-  semantic-versioning:
-    permissions: write-all
+  update_version:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Install semver utility
+      
+      - name: Check branch name and increment version
         run: |
-          sudo apt-get update
-          sudo apt-get install -y nodejs npm
-          sudo npm install -g semver
+          # Get the branch name from the event payload
+          BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}")
 
-      - name: Add Version
-        if: github.event.pull_request.merged == true
-        env:
-          GITHUB_REF_SLUG: ${{ github.event.pull_request.head.ref }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -x
-          if [[ "$GITHUB_REF_SLUG" =~ patch* ]]; then
-            version=$(git tag --sort=v:refname | tail -n1)
-            version=$(semver bump patch $version)
-          elif [[ "$GITHUB_REF_SLUG" =~ feature* ]]; then
-            version=$(git tag --sort=v:refname | tail -n1)
-            version=$(semver bump minor $version)
-          elif [[ "$GITHUB_REF_SLUG" =~ release* ]]; then
-            version=$(git tag --sort=v:refname | tail -n1)
-            version=$(semver bump major $version)
-          else
-            echo "Skipping branch with name $GITHUB_REF_SLUG"
-            exit 0
-          fi
-        
-          if [[ -n "$version" ]]; then
-            git config --global user.email "valeryk@bynet.co.il"
-            git config --global user.name "ValeryKhirin"
-          
-            git tag "$version"
-            git push origin "$version"
-          else
-            echo "Skipping tag creation for branch $GITHUB_REF_SLUG"
-            exit 0
+          # Set the initial version number
+          CURRENT_VERSION="0.0.0"
+
+          # Increment the version number based on the branch name
+          if [[ $BRANCH_NAME == "patch"* ]]; then
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$3++; print}')
+          elif [[ $BRANCH_NAME == "feature"* ]]; then
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$2++; print}')
+          elif [[ $BRANCH_NAME == "release"* ]]; then
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$1++; print}')
           fi
 
+          # Set the new version number as an environment variable
+          echo "::set-env name=NEW_VERSION::$NEW_VERSION"
+      
+      - name: Update version number
+        run: |
+          # Replace this command with the one that fits your project setup
+          sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" version.txt
