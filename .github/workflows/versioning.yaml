@@ -40,3 +40,5 @@ jobs:
             echo "Skipping tag creation for branch $GITHUB_REF_SLUG"
             exit 0
           fi
+
+          
