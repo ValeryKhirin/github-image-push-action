@@ -25,6 +25,7 @@ jobs:
           GITHUB_REF_SLUG: ${{ github.event.pull_request.head.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -x
           if [[ "$GITHUB_REF_SLUG" =~ ^patch.* ]]; then
             version=$(git tag --sort=v:refname | tail -n1)
             version=$(semver bump patch $version)
