@@ -3,6 +3,8 @@ name: Semantic Versioning
 on:
   pull_request:
     types: [closed]
+    branches:
+      - main
 
 jobs:
   semantic-versioning:
@@ -26,13 +28,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
-          if [[ "$GITHUB_REF_SLUG" =~ ^patch.* ]]; then
+          if [[ "$GITHUB_REF_SLUG" =~ patch* ]]; then
             version=$(git tag --sort=v:refname | tail -n1)
             version=$(semver bump patch $version)
-          elif [[ "$GITHUB_REF_SLUG" =~ ^feature.* ]]; then
+          elif [[ "$GITHUB_REF_SLUG" =~ feature* ]]; then
             version=$(git tag --sort=v:refname | tail -n1)
             version=$(semver bump minor $version)
-          elif [[ "$GITHUB_REF_SLUG" =~ ^release.* ]]; then
+          elif [[ "$GITHUB_REF_SLUG" =~ release* ]]; then
             version=$(git tag --sort=v:refname | tail -n1)
             version=$(semver bump major $version)
           else
