@@ -6,7 +6,6 @@ on:
 
 jobs:
   semantic-versioning:
-    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +17,11 @@ jobs:
         env:
           GITHUB_REF_SLUG: ${{ github.event.pull_request.head.ref }}
         run: |
-          if [[ "$GITHUB_REF_SLUG" =~ ^patch/.*$ ]]; then
+          if [[ "$GITHUB_REF_SLUG" =~ ^patch.* ]]; then
             version="1.0.1"
-          elif [[ "$GITHUB_REF_SLUG" =~ ^feature/.*$ ]]; then
+          elif [[ "$GITHUB_REF_SLUG" =~ ^feature.* ]]; then
             version="1.1.0"
-          elif [[ "$GITHUB_REF_SLUG" =~ ^release/.*$ ]]; then
+          elif [[ "$GITHUB_REF_SLUG" =~ ^release.* ]]; then
             version="2.0.0"
           else
             echo "Skipping branch with name $GITHUB_REF_SLUG"
