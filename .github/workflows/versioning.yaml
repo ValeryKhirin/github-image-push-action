@@ -6,6 +6,7 @@ on:
 
 jobs:
   semantic-versioning:
+    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
@@ -16,6 +17,7 @@ jobs:
         if: github.event.pull_request.merged == true
         env:
           GITHUB_REF_SLUG: ${{ github.event.pull_request.head.ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ "$GITHUB_REF_SLUG" =~ ^patch.* ]]; then
             version="1.0.1"
