@@ -32,4 +32,4 @@ jobs:
       - name: Update version number
         run: |
           # Replace this command with the one that fits your project setup
-          sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" ../../version.txt
+          awk -v old="$CURRENT_VERSION" -v new="$NEW_VERSION" '{gsub(old,new)}1' ../../version.txt > tmpfile && mv tmpfile ../../version.txt
