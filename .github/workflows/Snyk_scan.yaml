@@ -2,7 +2,7 @@ name: Snyk Scan for Python Vulnerabilities
 
 on:
   pull_request:
-    types: [closed]
+    types: [opened]
 
 jobs:
   scan:
