@@ -38,7 +38,7 @@ jobs:
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Create Git tag
-        if: steps.version.outputs.value != 'none' && github.event_name == 'push' && endsWith(github.ref, '/tags/${{ env.VERSION }}') == false
+        if: ${{ env.VERSION }}
         run: |
           git tag ${{ env.VERSION }}
           git push origin ${{ env.VERSION }}
