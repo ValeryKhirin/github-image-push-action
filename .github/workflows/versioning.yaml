@@ -40,7 +40,7 @@ jobs:
       - name: Create Git tag
         if: ${{ env.VERSION }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.VERSION_TOKEN }}
         run: |
           git tag ${{ env.VERSION }}
           git push origin ${{ env.VERSION }}
