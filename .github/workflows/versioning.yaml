@@ -3,9 +3,6 @@ on:
   pull_request:
     types: [closed]
 
-env:
-  VERSION: 0.0.0
-
 jobs:
   update_version:
     permissions: write-all
