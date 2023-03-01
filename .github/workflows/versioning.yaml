@@ -34,6 +34,7 @@ jobs:
           else
             TAG=${{ env.VERSION }}
           fi
+          echo "Branch name: ${{ github.ref }}, TAG: $TAG"
           echo "::set-output name=tag::$TAG"
 
       - name: Create Git tag
