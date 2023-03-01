@@ -38,7 +38,7 @@ jobs:
           echo "::set-output name=tag::$TAG"
 
       - name: Create Git tag
-        if: ${{ steps.version.outputs.tag }} != ${{ env.VERSION }}
+        if: ${{ steps.version.outputs.tag }} != ${{ env.VERSION }} && !contains(git ls-remote --tags origin refs/tags/${{ steps.version.outputs.tag }}), ${{ steps.version.outputs.tag }}
         run: |
           git tag ${{ steps.version.outputs.tag }}
           git push origin ${{ steps.version.outputs.tag }}
