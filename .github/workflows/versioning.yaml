@@ -14,31 +14,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Git
-        run: |
-          git config user.name "ValeryKhirin"
-          git config user.email "valerykhirin@gmail.com"
-      
-      - name: Determine version number
+      - name: Set Version
         id: version
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/patch"* ]]; then
-            TAG_ARRAY=($(echo ${{ env.VERSION }} | tr '.' ' '))
-            TAG="${TAG_ARRAY[0]}.${TAG_ARRAY[1]}.$((${TAG_ARRAY[2]}+1))"
-          elif [[ "${{ github.ref }}" == "refs/heads/feature"* ]]; then
-            TAG_ARRAY=($(echo ${{ env.VERSION }} | tr '.' ' '))
-            TAG="${TAG_ARRAY[0]}.$((${TAG_ARRAY[1]}+1)).0"
-          elif [[ "${{ github.ref }}" == "refs/heads/release"* ]]; then
-            TAG_ARRAY=($(echo ${{ env.VERSION }} | tr '.' ' '))
-            TAG="$(( ${TAG_ARRAY[0]}+1 )).0.0"
+          # Get current version from environment variable
+          current_version=$VERSION
+
+          # Get branch name
+          branch_name=$(echo $GITHUB_REF | sed 's|.*/||')
+
+          # Set version based on branch name
+          if [[ "$branch_name" == patch* ]]; then
+            new_version=$(echo $current_version | awk -F. '{$NF+=1; OFS="."; print $0}')
+          elif [[ "$branch_name" == feature* ]]; then
+            new_version=$(echo $current_version | awk -F. '{$(NF-1)+=1; $NF=0; OFS="."; print $0}')
+          elif [[ "$branch_name" == release* ]]; then
+            new_version=$(echo $current_version | awk -F. '{$1+=1; $2=$3=0; OFS="."; print $0}')
           else
-            TAG=${{ env.VERSION }}
+            echo "No version change"
+            exit 1
           fi
-          echo "Branch name: ${{ github.ref }}, TAG: $TAG"
-          echo "::set-output name=tag::$TAG"
+
+          # Set output variable
+          echo "::set-output name=tag::$new_version"
 
       - name: Create Git tag
-        if: ${{ steps.version.outputs.tag }} != ${{ env.VERSION }} && -z "$(git ls-remote --tags origin ${{ steps.version.outputs.tag }})"
+        if: ${{ steps.version.outputs.tag != env.VERSION }}
         run: |
           git tag ${{ steps.version.outputs.tag }}
           git push origin ${{ steps.version.outputs.tag }}
