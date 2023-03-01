@@ -36,6 +36,8 @@ jobs:
           esac
           echo "${version[0]}.${version[1]}.${version[2]}" > VERSION
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          git commit -am "Update Version ${version[0]}"
+          git push
 
       - name: Create Git tag
         if: ${{ env.VERSION }}
