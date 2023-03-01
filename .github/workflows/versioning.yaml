@@ -13,32 +13,32 @@ jobs:
 
       - name: Get current branch name
         id: branchname
-        run: echo ::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})
+        run: echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
 
       - name: Determine version increment
         id: version
         run: |
-          case "${{ steps.branchname.outputs.branch }}" in
-            patch*) echo ::set-output name=increment::patch ;;
-            feature*) echo ::set-output name=increment::minor ;;
-            release*) echo ::set-output name=increment::major ;;
-            *) echo "Invalid branch name"; exit 1 ;;
+          case "${{ steps.branchname.outputs.value }}" in
+            patch*) echo "patch" ;;
+            feature*) echo "minor" ;;
+            release*) echo "major" ;;
+            *) echo "none" ;;
           esac
 
       - name: Update VERSION file
-        if: steps.version.outputs.increment != 'none'
+        if: steps.version.outputs.value != 'none'
         run: |
           IFS='.' read -ra version <<< "$(<VERSION)"
-          case "${{ steps.version.outputs.increment }}" in
+          case "${{ steps.version.outputs.value }}" in
             patch) version[2]=$((version[2]+1)) ;;
             minor) version[1]=$((version[1]+1)); version[2]=0 ;;
             major) version[0]=$((version[0]+1)); version[1]=0; version[2]=0 ;;
           esac
           echo "${version[0]}.${version[1]}.${version[2]}" > VERSION
-          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "::set-env name=VERSION::$(cat VERSION)"
 
       - name: Create Git tag
-        if: ${{ steps.version.outputs.increment != 'none' }}
+        if: steps.version.outputs.value != 'none' && github.event_name == 'push' && endsWith(github.ref, '/tags/${{ env.VERSION }}') == false
         run: |
           git tag ${{ env.VERSION }}
           git push origin ${{ env.VERSION }}
