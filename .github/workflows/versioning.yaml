@@ -20,22 +20,22 @@ jobs:
           git config user.email "valerykhirin@gmail.com"
       
 
+
       - name: Determine version number
         id: version
         run: |
-          if [[ ${{ github.ref }} == refs/heads/patch* ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/patch"* ]]; then
             TAG_ARRAY=($(echo ${{ env.TAG }} | tr '.' ' '))
             TAG="${TAG_ARRAY[0]}.${TAG_ARRAY[1]}.$((${TAG_ARRAY[2]}+1))"
-          elif [[ ${{ github.ref }} == refs/heads/feature* ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/feature"* ]]; then
             TAG_ARRAY=($(echo ${{ env.TAG }} | tr '.' ' '))
             TAG="${TAG_ARRAY[0]}.$((${TAG_ARRAY[1]}+1)).0"
-          elif [[ ${{ github.ref }} == refs/heads/release* ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/release"* ]]; then
             TAG_ARRAY=($(echo ${{ env.TAG }} | tr '.' ' '))
             TAG="$(( ${TAG_ARRAY[0]}+1 )).0.0"
           else
             TAG=${{ env.TAG }}
           fi
-          echo "$TAG" > VERSION
           echo "::set-output name=tag::$TAG"
 
       - name: Create Git tag
@@ -43,7 +43,3 @@ jobs:
         run: |
           git tag ${{ steps.version.outputs.tag }}
           git push origin ${{ steps.version.outputs.tag }}
-          git add VERSION
-          git commit -m "Update version to ${{ steps.version.outputs.tag }}"
-          git push origin HEAD:refs/heads/${{ github.ref }}
-#
