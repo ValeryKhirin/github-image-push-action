@@ -11,32 +11,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set Version
+      - name: Determine Version
         id: version
         run: |
-          # Get current version from environment variable
-          current_version=$VERSION
-
-          # Get branch name
-          branch_name=$(echo $GITHUB_REF | sed 's|.*/||')
-
-          # Set version based on branch name
-          if [[ "$branch_name" == patch* ]]; then
-            new_version=$(echo $current_version | awk -F. '{$NF+=1; OFS="."; print $0}')
-          elif [[ "$branch_name" == feature* ]]; then
-            new_version=$(echo $current_version | awk -F. '{$(NF-1)+=1; $NF=0; OFS="."; print $0}')
-          elif [[ "$branch_name" == release* ]]; then
-            new_version=$(echo $current_version | awk -F. '{$1+=1; $2=$3=0; OFS="."; print $0}')
+          if [[ $GITHUB_REF =~ ^refs/tags/.* ]]; then
+              echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
           else
-            echo "No version change"
-            exit 1
+              branch=$(echo ${GITHUB_REF#refs/heads/})
+              if [[ $branch =~ ^feature.* ]]; then
+                  part=2
+              elif [[ $branch =~ ^release.* ]]; then
+                  part=1
+              elif [[ $branch =~ ^patch.* ]]; then
+                  part=3
+              fi
+              current_version=$(echo $VERSION | cut -d "." -f $part)
+              new_version=$(($current_version + 1))
+              new_version=$(echo $VERSION | awk -v new_version="$new_version" -v part="$part" 'BEGIN {FS=OFS="."} {$part=new_version; for (i=part+1;i<=NF;i++) $(i)=0; print}')
+              echo "::set-output name=tag::v$new_version"
+              echo "export VERSION=$new_version" >> $GITHUB_ENV
           fi
-
-          # Set output variable
-          echo "::set-output name=tag::$new_version"
-
+          
       - name: Create Git tag
-        if: ${{ steps.version.outputs.tag != env.VERSION }}
+        if: ${{ steps.version.outputs.tag }} != ${{ env.VERSION }}
         run: |
           git tag ${{ steps.version.outputs.tag }}
           git push origin ${{ steps.version.outputs.tag }}
