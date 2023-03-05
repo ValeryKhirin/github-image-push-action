@@ -26,6 +26,9 @@ jobs:
             *) echo "none" ;;
           esac
 
+      - name: Print
+        run: echo "${{ steps.version_type.outputs.value }}"
+
       - name: Inrease Patch
         id: patch
         if: ${{ steps.version_type.outputs.value == 'patch' }}
