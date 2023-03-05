@@ -29,7 +29,7 @@ jobs:
       - name: Inrease Patch
         id: patch
         if: ${{ steps.version_type.outputs.value }} == 'patch'
-        uses: anothrNick/github-tag-action@1.55.0 
+        uses: anothrNick/github-tag-action@2.11.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
@@ -39,7 +39,7 @@ jobs:
       - name: Increase Minor
         id: minor
         if: ${{steps.version_type.outputs.value }} == 'minor'
-        uses: anothrNick/github-tag-action@1.55.0 
+        uses: anothrNick/github-tag-action@2.11.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
@@ -49,7 +49,7 @@ jobs:
       - name: Increase Major
         id: major
         if: ${{ steps.version_type.outputs.value }} == 'major'
-        uses: anothrNick/github-tag-action@1.55.0 
+        uses: anothrNick/github-tag-action@2.11.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
