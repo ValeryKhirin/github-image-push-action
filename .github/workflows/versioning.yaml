@@ -17,7 +17,7 @@ jobs:
           git config --global user.name "ValeryKhirin"
 
       - name: Determine version increment
-        id: version_type
+        id: versiontype
         run: |
           case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
             patch*) echo "patch" ;;
@@ -27,11 +27,11 @@ jobs:
           esac
 
       - name: Print
-        run: echo "${{ steps.version_type.outputs.value }}"
+        run: echo "${{ steps.versiontype.outputs.value }}"
 
       - name: Inrease Patch
         id: patch
-        if: ${{ steps.version_type.outputs.value == 'patch' }}
+        if: ${{ steps.versiontype.outputs.value == 'patch' }}
         uses: anothrNick/github-tag-action@1.36.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,7 +41,7 @@ jobs:
 
       - name: Increase Minor
         id: minor
-        if: ${{steps.version_type.outputs.value == 'minor' }}
+        if: ${{steps.versiontype.outputs.value == 'minor' }}
         uses: anothrNick/github-tag-action@1.36.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +51,7 @@ jobs:
 
       - name: Increase Major
         id: major
-        if: ${{ steps.version_type.outputs.value == 'major' }}
+        if: ${{ steps.versiontype.outputs.value == 'major' }}
         uses: anothrNick/github-tag-action@1.36.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
