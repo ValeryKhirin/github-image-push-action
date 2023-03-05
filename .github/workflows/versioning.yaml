@@ -29,7 +29,7 @@ jobs:
           esac
 
       - name: Inrease Patch
-        id: patch§
+        id: patch
         if: steps.version_type.outputs.value == 'patch'
         uses: anothrNick/github-tag-action@1.55.0 
         env:
