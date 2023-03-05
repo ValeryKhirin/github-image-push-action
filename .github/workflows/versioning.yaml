@@ -7,6 +7,7 @@ on:
 jobs:
   update_version:
     runs-on: ubuntu-latest
+    environment: VERSIONING
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
