@@ -7,7 +7,8 @@ on:
 jobs:
   update_version:
     runs-on: ubuntu-latest
-    environment: VERSIONING
+    env:
+      VERSION: ${{ secrets.VERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -16,12 +17,6 @@ jobs:
         run: |
           git config --global user.email "valeryk@bynet.co.il"
           git config --global user.name "ValeryKhirin"
-
-      - name: Set Variables
-        uses: marcdomain/set-variables@v1
-        with:
-            variables: | 
-              VERSION: "1.0.0"
 
       - name: Determine version increment
         id: version_type
@@ -33,23 +28,32 @@ jobs:
             *) echo "none" ;;
           esac
 
-      - name: Update VERSION file
-        if: steps.version_type.outputs.value != 'none'
-        run: |
-          echo "${{ env.VERSION }}"
-          IFS='.' read -ra version <<< "$(echo ${{ env.VERSION }})"
-          case "${{ steps.version_type.outputs.value }}" in
-            patch) version[2]=$((version[2]+1)) ;;
-            minor) version[1]=$((version[1]+1)); version[2]=0 ;;
-            major) version[0]=$((version[0]+1)); version[1]=0; version[2]=0 ;;
-          esac
-          VERSION="${version[0]}.${version[1]}.${version[2]}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
-      - name: Create Git tag
-        if: ${{ env.VERSION }}
+      - name: Inrease Patch
+        id: patch§
+        if: steps.version_type.outputs.value == 'patch'
+        uses: anothrNick/github-tag-action@1.55.0 
         env:
-          GITHUB_TOKEN: ${{ secrets.VERSION_TOKEN }}
-        run: |
-          git tag ${{ env.VERSION }}
-          git push --tags origin ${{ env.VERSION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: PATCH
+          INITIAL_VERSION: 0.0.0
+
+      - name: Increase Minor
+        id: minor
+        if: steps.version_type.outputs.value == 'minor'
+        uses: anothrNick/github-tag-action@1.55.0 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: MINOR
+          INITIAL_VERSION: 0.0.0
+
+      - name: Increase Major
+        id: major
+        if: steps.version_type.outputs.value == 'major'
+        uses: anothrNick/github-tag-action@1.55.0 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: MQAJOR
+          INITIAL_VERSION: 0.0.0
