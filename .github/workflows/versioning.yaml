@@ -20,7 +20,8 @@ jobs:
       - name: Set Variables
         uses: marcdomain/set-variables@v1
         with:
-            variables: VERSION=1.0.0
+            variables: | 
+              VERSION: "1.0.0"
 
       - name: Determine version increment
         id: version_type
