@@ -16,14 +16,10 @@ jobs:
           git config --global user.email "valeryk@bynet.co.il"
           git config --global user.name "ValeryKhirin"
 
-      - name: Get current branch name
-        id: branchname
-        run: echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-
       - name: Determine version increment
         id: version_type
         run: |
-          case "${{ steps.branchname.outputs.value }}" in
+          case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
             patch*) echo "patch" ;;
             feature*) echo "minor" ;;
             release*) echo "major" ;;
