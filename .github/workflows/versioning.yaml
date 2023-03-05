@@ -3,8 +3,7 @@ on:
   pull_request:
     types:
       - closed
-env:
-  VERSION: env.VERSION
+      
 jobs:
   update_version:
     runs-on: ubuntu-latest
