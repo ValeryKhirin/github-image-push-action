@@ -3,7 +3,7 @@ on:
   pull_request:
     types:
       - closed
-      
+
 jobs:
   update_version:
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
       - name: Update VERSION file
         if: steps.version_type.outputs.value != 'none'
         run: |
-          echo ${{ env.VERSION }}
+          echo "${{ env.VERSION }}"
           IFS='.' read -ra version <<< "$(echo ${{ env.VERSION }})"
           case "${{ steps.version_type.outputs.value }}" in
             patch) version[2]=$((version[2]+1)) ;;
