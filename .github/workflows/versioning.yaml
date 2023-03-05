@@ -21,7 +21,7 @@ jobs:
         run: echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
 
       - name: Determine version increment
-        id: version
+        id: version_type
         run: |
           case "${{ steps.branchname.outputs.value }}" in
             patch*) echo "patch" ;;
@@ -31,18 +31,16 @@ jobs:
           esac
 
       - name: Update VERSION file
-        if: steps.version.outputs.value != 'none'
+        if: steps.version_type.outputs.value != 'none'
         run: |
-          IFS='.' read -ra version <<< "$(<VERSION)"
-          case "${{ steps.version.outputs.value }}" in
+          IFS='.' read -ra version <<< "$(echo ${{ env.VERSION }})"
+          case "${{ steps.version_type.outputs.value }}" in
             patch) version[2]=$((version[2]+1)) ;;
             minor) version[1]=$((version[1]+1)); version[2]=0 ;;
             major) version[0]=$((version[0]+1)); version[1]=0; version[2]=0 ;;
           esac
-          echo "${version[0]}.${version[1]}.${version[2]}" > VERSION
-          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-          git commit -am "Update Version ${version[0]}.${version[1]}.${version[2]}"
-          git push
+          VERSION="${version[0]}.${version[1]}.${version[2]}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Create Git tag
         if: ${{ env.VERSION }}
@@ -50,4 +48,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.VERSION_TOKEN }}
         run: |
           git tag ${{ env.VERSION }}
-          git push origin ${{ env.VERSION }}
+          git push --tags origin ${{ env.VERSION }}
