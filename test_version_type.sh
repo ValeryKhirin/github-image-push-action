@@ -20,10 +20,10 @@ test2(){
     echo "$VERSION"
 }
 
-# test "feature22"
-# test "release/a"
-# test "patch.bb"
-# test "release-valery"
-# test "boom"
+test "feature22"
+test "release/a"
+test "patch.bb"
+test "release-valery"
+test "boom"
 
-test2 "minor"
+# test2 "minor"

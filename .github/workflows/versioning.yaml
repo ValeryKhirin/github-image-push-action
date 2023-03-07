@@ -27,7 +27,7 @@ jobs:
           esac
 
       - name: Print
-        run: echo ${{ steps.versiontype.outputs.value }}
+        run: echo "${{ steps.versiontype.outputs.value }}"
 
       - name: Inrease Patch
         id: patch
