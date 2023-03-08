@@ -19,6 +19,17 @@ jobs:
       - name: Determine version increment
         id: versiontype
         run: |
+          # Extract last tag
+
+          # Check if exists, if not ---> initialize 0.0.1
+
+          # If yes, determine change type
+
+          # Increase version accordingly
+
+          # Push release with GitHub release API
+
+          # Store artifact 
           case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
             patch*) echo "patch" ;;
             feature*) echo "minor" ;;
@@ -35,7 +46,6 @@ jobs:
         uses: anothrNick/github-tag-action@1.36.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
           DEFAULT_BUMP: PATCH
           INITIAL_VERSION: 0.0.0
 
@@ -45,7 +55,6 @@ jobs:
         uses: anothrNick/github-tag-action@1.36.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
           DEFAULT_BUMP: MINOR
           INITIAL_VERSION: 0.0.0
 
@@ -55,6 +64,5 @@ jobs:
         uses: anothrNick/github-tag-action@1.36.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
           DEFAULT_BUMP: MQAJOR
           INITIAL_VERSION: 0.0.0
