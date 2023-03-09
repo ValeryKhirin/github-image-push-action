@@ -23,4 +23,5 @@ jobs:
           args: --severity-threshold=high
 
       - name: Print json
-        run: cat snyk.json
+        run: |
+          cat snyk.json
