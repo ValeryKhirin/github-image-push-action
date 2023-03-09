@@ -1,0 +1,27 @@
+name: Snyk Scan for Golang Vulnerabilities
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  scan:
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Snyk to check vulnerabilities in Golang
+        continue-on-error: true
+        uses: snyk/actions/golang@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          json: true
+          args: --severity-threshold=high
+
+      - name: Print json
+        run: |
+          cat snyk.json
