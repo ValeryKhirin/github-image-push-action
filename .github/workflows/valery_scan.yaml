@@ -28,7 +28,7 @@ jobs:
           snyk auth ${{ secrets.SNYK_TOKEN }}
           for image_name in "${imageslist[@]}"; do
             echo "$image_name: " >> result.txt
-            snyk container test  $image_name  --json-file-output=snyk.json || true
+            snyk container test  $image_name  --severity-threshold=high --json-file-output=snyk.json || true
             echo "print snyk:"
             cat snyk.json
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
