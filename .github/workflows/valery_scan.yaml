@@ -25,7 +25,6 @@ jobs:
           touch result.txt
           echo "snyk test results:" > result.txt
           readarray -t imageslist < docker_images.txt
-          cat imageslist
           snyk auth ${{ secrets.SNYK_TOKEN }}
           for image_name in "${imageslist[@]}"; do
             echo "$image_name: " >> result.txt
