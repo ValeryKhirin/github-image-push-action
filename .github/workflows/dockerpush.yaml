@@ -72,9 +72,10 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            SNYK scan results: \
-            ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
-            ${{ steps.details.outputs.value }}
+#            SNYK scan results: \
+#            ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
+#            ${{ steps.details.outputs.value }}
+          filepath: snyk.json
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
