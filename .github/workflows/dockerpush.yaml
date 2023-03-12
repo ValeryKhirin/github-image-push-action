@@ -61,14 +61,19 @@ jobs:
           cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
           multiline: true
 
+      - name: Get Details and Remidiation
+        id: details
+        run: |
+          details=(${{ steps.vulnerability.outputs.value }} | grep -Po '(?<=## Details)[\s\S]*?(?=## Remediation)')
+          echo "$details"
+
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             SNYK scan results: \
             ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
-            details=$(${{ steps.vulnerability.outputs.value }} | grep -Po '(?<=## Details)[\s\S]*?(?=## Remediation)')
-            echo "$details"
+            ${{ steps.details.outputs.value }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
