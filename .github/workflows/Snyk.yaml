@@ -14,14 +14,12 @@ jobs:
      steps:
       - name: Checkout
         uses: actions/checkout@v3      
-            
-      - name: Fetch latest release version
-        id: release
-        continue-on-error: true 
-        run : |
-               
-               docker-compose -f docker-compose.yml up -d
-               docker ps --format '{{.Image}}' >> docker_images.txt
+
+      - name: Build Docker image
+        run: |
+          docker build -t valerykhirin/github-image-push-actions:latest .
+          docker ps --format '{{.Image}}' >> docker_images.txt
+          echo "Image built!"
                
       - uses: snyk/actions/setup@master
       - name: Snyk monitor
