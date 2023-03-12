@@ -31,38 +31,53 @@ jobs:
 
           # Store artifact 
           case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
-            patch*) echo "patch" ;;
-            feature*) echo "minor" ;;
-            release*) echo "major" ;;
+            patch*) 
+              uses: anothrNick/github-tag-action@1.36.0 
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                DEFAULT_BUMP: PATCH
+                INITIAL_VERSION: 0.0.0;;
+            feature*)
+              uses: anothrNick/github-tag-action@1.36.0 
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                DEFAULT_BUMP: MINOR
+                INITIAL_VERSION: 0.0.0;;
+            release*)
+              uses: anothrNick/github-tag-action@1.36.0 
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                DEFAULT_BUMP: PATCH
+                INITIAL_VERSION: 0.0.0;;
             *) echo "none" ;;
           esac
 
-      - name: Print
-        run: echo "${{ steps.versiontype.outputs.value }}"
+      # - name: Print
+      #   run: echo "${{ steps.versiontype.outputs.value }}"
 
-      - name: Inrease Patch
-        id: patch
-        if: ${{ steps.versiontype.outputs.value == 'patch' }}
-        uses: anothrNick/github-tag-action@1.36.0 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: PATCH
-          INITIAL_VERSION: 0.0.0
+      # - name: Inrease Patch
+      #   id: patch
+      #   if: ${{ steps.versiontype.outputs.value == 'patch' }}
+      #   uses: anothrNick/github-tag-action@1.36.0 
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     DEFAULT_BUMP: PATCH
+      #     INITIAL_VERSION: 0.0.0
 
-      - name: Increase Minor
-        id: minor
-        if: ${{steps.versiontype.outputs.value == 'minor' }}
-        uses: anothrNick/github-tag-action@1.36.0 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: MINOR
-          INITIAL_VERSION: 0.0.0
+      # - name: Increase Minor
+      #   id: minor
+      #   if: ${{steps.versiontype.outputs.value == 'minor' }}
+      #   uses: anothrNick/github-tag-action@1.36.0 
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     DEFAULT_BUMP: MINOR
+      #     INITIAL_VERSION: 0.0.0
 
-      - name: Increase Major
-        id: major
-        if: ${{ steps.versiontype.outputs.value == 'major' }}
-        uses: anothrNick/github-tag-action@1.36.0 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: MQAJOR
-          INITIAL_VERSION: 0.0.0
+      # - name: Increase Major
+      #   id: major
+      #   if: ${{ steps.versiontype.outputs.value == 'major' }}
+      #   uses: anothrNick/github-tag-action@1.36.0 
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     DEFAULT_BUMP: MQAJOR
+      #     INITIAL_VERSION: 0.0.0
