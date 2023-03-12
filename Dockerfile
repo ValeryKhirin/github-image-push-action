@@ -1,9 +1,4 @@
-FROM nginx:1.23.3-alpine
+FROM alpine:3.17.2
 
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-COPY ./html/ /usr/share/nginx/html/
-
-USER nonroot
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+RUN apk add --no-cache mysql-client
+ENTRYPOINT ["mysql"]
