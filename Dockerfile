@@ -1,4 +1,7 @@
-FROM alpine:3.17.2
-
-RUN apk add --no-cache mysql-client
-ENTRYPOINT ["mysql"]
+FROM alpine:latest
+COPY . .
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+RUN pip3 install -r requirements.txt
