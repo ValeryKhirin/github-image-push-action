@@ -65,7 +65,7 @@ jobs:
       #   id: details
       #   run: |
       #     string=${{ steps.vulnerability.outputs.value }}
-      #     details=$string | grep -Po '(?<=## Details)[\s\S]*?(?=## Remediation)'
+      #     details=$(echo "$string" | grep -Po '(?<=## Details)[\s\S]*?(?=## Remediation)')
       #     echo "$details"
 
       - name: Comment PR
