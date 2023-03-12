@@ -67,7 +67,8 @@ jobs:
           message: |
             SNYK scan results: \
             ${{ steps.snyk_success.outputs.value }} ${{ steps.summary.outputs.value }}
-            ${{ steps.vulnerability.outputs.value }}
+            details=$(${{ steps.vulnerability.outputs.value }} | grep -Po '(?<=## Details)[\s\S]*?(?=## Remediation)')
+            echo "$details"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Docker Hub
