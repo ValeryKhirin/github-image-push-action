@@ -44,3 +44,4 @@ jobs:
         if: ${{ always() }}
         with:
          filePath: final_result.txt 
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
