@@ -34,6 +34,7 @@ jobs:
             jq ' .vulnerabilities[] | {id,title,severity} ' snyk.json  >> result.txt
           done
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
+          cat final_result.txt
 
       - name: Update snyk result as pr comment
         uses: thollander/actions-comment-pull-request@v2
