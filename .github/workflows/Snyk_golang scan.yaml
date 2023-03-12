@@ -24,4 +24,4 @@ jobs:
 
       - name: Print json
         run: |
-          cat snyk.json
+          cat snyk.jsons
