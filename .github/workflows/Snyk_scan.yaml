@@ -22,48 +22,30 @@ jobs:
           json: true
           args: --severity-threshold=high
 
-      # - name: Extract Snyk scan status
-      #   uses: sergeysova/jq-action@v2
-      #   id: snyk_success
-      #   with:
-      #     cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
+      - name: Extract Snyk scan status
+        uses: sergeysova/jq-action@v2
+        id: snyk_success
+        with:
+          cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
 
-      # - name: Extract Snyk scan summary
-      #   uses: sergeysova/jq-action@v2
-      #   id: summary
-      #   with:
-      #     cmd: 'jq .summary snyk.json -r'
+      - name: Extract Snyk scan summary
+        uses: sergeysova/jq-action@v2
+        id: summary
+        with:
+          cmd: 'jq .summary snyk.json -r'
 
-      # - name: Extract Snyk scan vulnerability description
-      #   uses: sergeysova/jq-action@v2
-      #   id: description
-      #   with:
-      #     cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
-      #     multiline: true
+      - name: Regex extraction
+        run: |
+          REGEX="(?=## Details)(.*?)(?=##)"
+          echo 'jq .remediation.unresolved[0].description | grep -Eo $REGEX'
 
-      - name: Fetch latest release version
-        id: release
-        continue-on-error: true 
-        run : |
-          docker-compose -f docker-compose.yml up -d
-          docker ps --format '{{.Image}}' >> docker_images.txt
 
-      - uses: snyk/actions/setup@master
-      - name: Monitor
-        run: | 
-          touch result.txt
-          echo "snyk test results:" > result.txt
-          readarray -t imageslist < docker_images.txt
-          snyk auth ${{ secrets.SNYK_TOKEN }}
-          for image_name in "${imageslist[@]}"; do
-          echo "$image_name: " >> result.txt
-          snyk container test  $image_name  --json-file-output=snyk.json || true
-          echo "print snyk:"
-          cat snyk.json
-          jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
-          jq ' .vulnerabilities[] | {id,title,severity} ' snyk.json  >> result.txt
-          done
-          cat result.txt | sed 's|[{"},]||g' > final_result.txt
+      - name: Extract Snyk scan vulnerability description
+        uses: sergeysova/jq-action@v2
+        id: description
+        with:
+          cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
+          multiline: true
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
