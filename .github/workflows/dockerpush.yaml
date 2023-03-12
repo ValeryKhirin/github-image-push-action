@@ -64,7 +64,7 @@ jobs:
       - name: Get Details and Remidiation
         id: details
         run: |
-          details=(${{ steps.vulnerability.outputs.value }} | grep -Po '(?<=## Details)[\s\S]*?(?=## Remediation)')
+          details=$(${{ steps.vulnerability.outputs.value }} | grep -Po '(?<=## Details)[\s\S]*?(?=## Remediation)')
           echo "$details"
 
       - name: Comment PR
