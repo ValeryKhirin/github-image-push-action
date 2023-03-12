@@ -15,7 +15,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t valerykhirin/github-image-push-actions:latest .
-          docker ps --format '{{.Image}}'
+          docker images | awk '{print $1":"$2}' | grep -v REPOSITORY >> docker_images.txt
           cat docker_images.txt
           echo "Image built!"
 
