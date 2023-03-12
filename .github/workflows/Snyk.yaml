@@ -3,9 +3,6 @@ name: getrelease
 on: 
   pull_request:
 
-env:
-  release_version_tag : "" 
-
 jobs:
   getrelease:
     permissions: write-all
@@ -21,7 +18,7 @@ jobs:
           docker ps --format '{{.Image}}' >> docker_images.txt
           echo "Image built!"
 
-      - name: Snyk monitor
+      - name: Snyk set up scan
         uses: snyk/actions/setup@master
         run: | 
           touch result.txt
