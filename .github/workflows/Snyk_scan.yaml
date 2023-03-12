@@ -22,24 +22,24 @@ jobs:
           json: true
           args: --severity-threshold=high
 
-      - name: Extract Snyk scan status
-        uses: sergeysova/jq-action@v2
-        id: snyk_success
-        with:
-          cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
+      # - name: Extract Snyk scan status
+      #   uses: sergeysova/jq-action@v2
+      #   id: snyk_success
+      #   with:
+      #     cmd: 'if [[ "$(jq .ok snyk.json -r)" == "true" ]]; then echo ":white_check_mark:"; else echo ":x:"; fi'
 
-      - name: Extract Snyk scan summary
-        uses: sergeysova/jq-action@v2
-        id: summary
-        with:
-          cmd: 'jq .summary snyk.json -r'
+      # - name: Extract Snyk scan summary
+      #   uses: sergeysova/jq-action@v2
+      #   id: summary
+      #   with:
+      #     cmd: 'jq .summary snyk.json -r'
 
-      - name: Extract Snyk scan vulnerability description
-        uses: sergeysova/jq-action@v2
-        id: description
-        with:
-          cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
-          multiline: true
+      # - name: Extract Snyk scan vulnerability description
+      #   uses: sergeysova/jq-action@v2
+      #   id: description
+      #   with:
+      #     cmd: 'echo -e `jq .remediation.unresolved[0].description snyk.json -r`'
+      #     multiline: true
 
       - uses: snyk/actions/setup@master
       - name: Monitor
