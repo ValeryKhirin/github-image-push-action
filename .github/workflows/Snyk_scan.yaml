@@ -34,10 +34,10 @@ jobs:
         with:
           cmd: 'jq .summary snyk.json -r'
 
-      - name: Regex extraction
-        run: |
-          REGEX="(?=## Details)(.*?)(?=##)"
-          echo 'jq .remediation.unresolved[0].description | grep -Eo $REGEX'
+      # - name: Regex extraction
+      #   run: |
+      #     REGEX="(?=## Details)(.*?)(?=##)"
+      #     echo 'jq .remediation.unresolved[0].description | grep -Eo $REGEX'
 
 
       - name: Extract Snyk scan vulnerability description
