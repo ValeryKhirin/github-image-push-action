@@ -30,12 +30,12 @@ jobs:
             echo "$image_name: " >> result.txt
             snyk container test  $image_name  --severity-threshold=high --json-file-output=snyk.json || true
             echo "print snyk:"
-            cat snyk.json
+            # cat snyk.json
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
             jq ' .vulnerabilities[] | {id,title,severity} ' snyk.json  >> result.txt
           done
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
-          cat final_result.txt
+          # cat final_result.txt
 
       - name: Update snyk result as pr comment
         uses: thollander/actions-comment-pull-request@v2
