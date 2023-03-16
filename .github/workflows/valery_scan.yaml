@@ -37,6 +37,8 @@ jobs:
             cat result.txt
           done
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
+          echo "final_result:"
+          cat final_result.txt
 
       - name: Update snyk result as pr comment
         uses: thollander/actions-comment-pull-request@v2
