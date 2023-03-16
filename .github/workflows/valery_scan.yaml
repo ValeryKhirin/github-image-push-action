@@ -37,10 +37,7 @@ jobs:
             fi
             echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
-            jq ' .vulnerabilities[] | "- **ID:** \(.id)
-            **Title:** \(.title)  
-            **Severity:** \(.severity)  
-            **Link:** https://snyk.io/vuln/\(.id)\n"' snyk.json  >> result.txt
+            jq '.vulnerabilities[] | printf("- **ID:** %s\n  **Title:** %s\n  **Severity:** %s\n  **Link:** https://snyk.io/vuln/%s\n", .id, .title, .severity, .id)' snyk.json >> result.txt
             echo "Result txt:"
             cat result.txt
           done
