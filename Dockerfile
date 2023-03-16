@@ -1,9 +1,7 @@
-FROM nginx:1.23.3-alpine
-
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-COPY ./html/ /usr/share/nginx/html/
-
-USER nonroot
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM alpine:latest
+COPY . .
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+RUN pip3 install -r requirements.txt
