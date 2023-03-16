@@ -32,6 +32,8 @@ jobs:
             echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
             jq ' .vulnerabilities[] | {id,title,severity} ' snyk.json  >> result.txt
+            id = jq ' .vulnerabilities[] | {id} '
+            echo "Link: https://security.snyk.io/vuln/${id}"
           done
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
 
