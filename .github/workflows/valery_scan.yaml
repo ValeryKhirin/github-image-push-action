@@ -37,13 +37,11 @@ jobs:
             fi
             echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
-            jq '.vulnerabilities[] | printf("- **ID:** %s\n  **Title:** %s\n  **Severity:** %s\n  **Link:** https://snyk.io/vuln/%s\n", .id, .title, .severity, .id)' snyk.json >> result.txt
+            jq '.vulnerabilities[] | "- **ID:** \(.id)\n  **Title:** \(.title)\n  **Severity:** \(.severity)\n  **Link:** https://snyk.io/vuln/\(.id)\n"' snyk.json | while read line; do echo -e "$line" >> result.txt; done
             echo "Result txt:"
             cat result.txt
           done
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
-
-
 
       - name: Update snyk result as pr comment
         uses: thollander/actions-comment-pull-request@v2
