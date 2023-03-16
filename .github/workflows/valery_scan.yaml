@@ -22,27 +22,6 @@ jobs:
       - uses: snyk/actions/setup@master
       - name: Scan
         run: |
-          # touch result.txt
-          # echo "snyk test results:" > result.txt
-          # readarray -t imageslist < docker_images.txt
-          # snyk auth ${{ secrets.SNYK_TOKEN }}
-          # for image_name in "${imageslist[@]}"; do
-          #   echo "$image_name: " >> result.txt
-          #   snyk container test  $image_name  --severity-threshold=high --json-file-output=snyk.json || true
-          #   if [[ ! -s snyk.json ]]; then
-          #     echo "Error: snyk.json is empty or does not exist"
-          #     echo "Contents of snyk.json:"
-          #     cat snyk.json
-          #     exit 1
-          #   fi
-          #   echo "print snyk:"
-          #   jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
-          #   jq '.vulnerabilities[] | "- **ID:** \(.id)  **Title:** \(.title)  **Severity:** \(.severity)  **Link:** https://snyk.io/vuln/\(.id)"' snyk.json | while read line; do echo -e "$line" >> result.txt; done
-          #   echo "Result txt:"
-          #   cat result.txt
-          # done
-          # cat result.txt | sed 's|[{"},]||g' > final_result.txt
-          
           touch result.txt
           echo "snyk test results:" > result.txt
           readarray -t imageslist < docker_images.txt
@@ -53,11 +32,7 @@ jobs:
             echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
             jq '.vulnerabilities[] | {id, title, severity, url: ("https://snyk.io/vuln/" + (.id | tostring))}' snyk.json >> result.txt
-            #echo "jq ' .vulnerabilities[] | {id} ' snyk.json"
-            # echo "Link: https://security.snyk.io/vuln/${jq ' .vulnerabilities[] | {id} ' snyk.json}" >> result.txt
           done
-          echo "HERREEEEREER"
-          cat result.txt
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
 
 
