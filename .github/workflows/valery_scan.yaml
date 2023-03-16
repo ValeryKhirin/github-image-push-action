@@ -52,7 +52,7 @@ jobs:
             snyk container test  $image_name  --severity-threshold=high --json-file-output=snyk.json || true
             echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
-            jq ' .vulnerabilities[] | {id,title,severity,Link: https://snyk.io/vuln/$id} ' snyk.json  >> result.txt
+            jq ' .vulnerabilities[] | {id,title,severity,Link: https://snyk.io/vuln/ֿֿ\(.id) ' snyk.json  >> result.txt
             #echo "jq ' .vulnerabilities[] | {id} ' snyk.json"
             # echo "Link: https://security.snyk.io/vuln/${jq ' .vulnerabilities[] | {id} ' snyk.json}" >> result.txt
           done
