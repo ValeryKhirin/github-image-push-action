@@ -23,15 +23,14 @@ jobs:
       - name: Scan
         run: |
           touch result.txt
-          echo "snyk test results:" > result.txt
+          echo "SNYK test results:" > result.txt
           readarray -t imageslist < docker_images.txt
           snyk auth ${{ secrets.SNYK_TOKEN }}
           for image_name in "${imageslist[@]}"; do
             echo "$image_name: " >> result.txt
             snyk container test  $image_name  --severity-threshold=high --json-file-output=snyk.json || true
-            echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
-            jq '.vulnerabilities[] | {id, title, severity, url: ("https://snyk.io/vuln/" + (.id | tostring))}' snyk.json >> result.txt
+            jq '.vulnerabilities[] | {"ID:"\(.id), "Title:"\(.title), "Severity:"\(.severity), Url: ("https://snyk.io/vuln/" + (.id | tostring))}' snyk.json >> result.txt
           done
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
 
