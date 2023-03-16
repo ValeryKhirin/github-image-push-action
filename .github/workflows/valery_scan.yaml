@@ -31,14 +31,15 @@ jobs:
             snyk container test  $image_name  --severity-threshold=high --json-file-output=snyk.json || true
             echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
-            jq ' .vulnerabilities[] | {id,title,severity} ' snyk.json  >> result.txt
-            echo "Link: https://security.snyk.io/vuln/" >> result.txt
-            echo "Result txt:"
-            cat result.txt
-          done
+            jq ' .vulnerabilities[] | {id,title,severity,packageManager,packageName,version} ' snyk.json | while read vulnerability; do
+            vulnerability_id=$(echo $vulnerability | jq -r '.id')
+            echo "- Vulnerability: $(echo $vulnerability | jq -r '.title') (Severity: $(echo $vulnerability | jq -r '.severity'))"
+            echo "  Link: https://snyk.io/vuln/$vulnerability_id"
+            echo "  Package: $(echo $vulnerability | jq -r '.packageName')"
+            echo "  Version: $(echo $vulnerability | jq -r '.version')"
+            echo "  Package Manager: $(echo $vulnerability | jq -r '.packageManager')"
+          done >> result.txt
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
-          echo "final_result:"
-          cat final_result.txt
 
       - name: Update snyk result as pr comment
         uses: thollander/actions-comment-pull-request@v2
