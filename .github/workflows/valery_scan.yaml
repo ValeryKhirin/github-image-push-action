@@ -32,7 +32,7 @@ jobs:
             echo "print snyk:"
             jq ' .summary   ' snyk.json  | sed 's|[",]||g' >> result.txt
             jq ' .vulnerabilities[] | {id,title,severity} ' snyk.json  >> result.txt
-            echo "jq ' .vulnerabilities[] | {id} ' snyk.json"
+            echo 'jq ' .vulnerabilities[] | {id} ' snyk.json'
             # echo "Link: https://security.snyk.io/vuln/${jq ' .vulnerabilities[] | {id} ' snyk.json}" >> result.txt
           done
           cat result.txt | sed 's|[{"},]||g' > final_result.txt
@@ -41,5 +41,4 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         if: ${{ always() }}
         with:
-          filePath: final_result.txt 
-          
+          filePath: final_result.txt
