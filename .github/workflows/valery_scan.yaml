@@ -40,7 +40,7 @@ jobs:
             jq ' .vulnarabilities[] | "ID: \(.id)"' snyk.json >> result.txt
             jq ' .vulnarabilities[] | "Title: \(.title)"' snyk.json >> result.txt
             jq ' .vulnarabilities[] | "Severity: \(.severity)"' snyk.json >> result.txt
-            jq ' .vulnarabilities[] | "Link: https://snyk.io/vuln/\(.id)"' snyk.json >> result.txt
+            # jq ' .vulnarabilities[] | "Link: https://snyk.io/vuln/\(.id)"' snyk.json >> result.txt
             echo "Result txt:"
             cat result.txt
           done
