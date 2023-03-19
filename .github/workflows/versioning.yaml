@@ -34,9 +34,9 @@ jobs:
           branch=$(cat branch_name.txt)
           tag=$(cat current_tag.txt)
           case $branch in
-            patch) echo $(semver --increment patch $tag) >> increment_tag.txt ;;
-            feature) echo $(semver --increment minor $tag) >> increment_tag.txt ;;
-            release) echo $(semver --increment major $tag) >> increment_tag.txt ;;
+            patch) echo "$tag" | awk -F '\.' '{print $1 "." $2 "." $3+1}' >> increment_tag.txt ;;
+            feature) echo "$tag" | awk -F '\.' '{print $1 "." $2+1 "." $3}' >> increment_tag.txt ;;
+            release) echo "$tag" | awk -F '\.' '{print $1+1 "." $2 "." $3}' >> increment_tag.txt ;;
             *) echo $tag >> increment_tag.txt ;;
           esac
           cat increment_tag.txt
