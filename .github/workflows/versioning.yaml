@@ -22,14 +22,12 @@ jobs:
             *) echo "none" >> branch-name.txt ;;
           esac
 
-      - name: Print previous
-        run: cat branch-name.txt
-
       - name: Determine current tag
         id: current-tag
         run: |
-          curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}'
-  
+          curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}' >> current_tag.txt
+          cat current_tag.txt
+
       - name: Increment tag based on branch name
         id: increment-tag
         run: |
