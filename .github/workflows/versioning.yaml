@@ -15,37 +15,32 @@ jobs:
       - name: Determine branch name
         id: branch-name
         run: |
-          echo "::set-output name=name::${GITHUB_REF#refs/heads/}"
-          cat name
+          case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
+            patch*) echo "patch" ;;
+            feature*) echo "minor" ;;
+            release*) echo "major" ;;
+            *) echo "none" ;;
+          esac
+
+      - name: Print previous
+        run: echo "${steps.branch-name.outputs}"
 
       - name: Determine current tag
         id: current-tag
         run: |
-          if [[ $(git tag --points-at HEAD) ]]; then
-            echo "::set-output name=tag::$(git describe --tags --abbrev=0 --exact-match)"
-          else
-            echo "::set-output name=tag::0.0.0"
-          fi
-
-    # case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
-    #         patch*) echo "patch" ;;
-    #         feature*) echo "minor" ;;
-    #         release*) echo "major" ;;
-    #         *) echo "none" ;;
-    #       esac
-  
+          curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}'
   
       - name: Increment tag based on branch name
         id: increment-tag
         run: |
           case ${{ steps.branch-name.outputs.name }} in
-            patch/*)
+            patch)
               echo "::set-output name=tag::$(semver --increment patch ${{ steps.current-tag.outputs.tag }})"
               ;;
-            feature/*)
+            feature)
               echo "::set-output name=tag::$(semver --increment minor ${{ steps.current-tag.outputs.tag }})"
               ;;
-            release/*)
+            release)
               echo "::set-output name=tag::$(semver --increment major ${{ steps.current-tag.outputs.tag }})"
               ;;
             *)
