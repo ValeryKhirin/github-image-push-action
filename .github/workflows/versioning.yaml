@@ -16,10 +16,10 @@ jobs:
         id: branch-name
         run: |
           case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
-            patch*) echo "patch" >> branch-name.txt ;;
-            feature*) echo "minor" >> branch-name.txt ;;
-            release*) echo "major" >> branch-name.txt ;;
-            *) echo "none" >> branch-name.txt ;;
+            patch*) echo "patch" >> branch_name.txt ;;
+            feature*) echo "minor" >> branch_name.txt ;;
+            release*) echo "major" >> branch_name.txt ;;
+            *) echo "none" >> branch_name.txt ;;
           esac
 
       - name: Determine current tag
@@ -30,22 +30,22 @@ jobs:
       - name: Increment tag based on branch name
         id: increment-tag
         run: |
-          branch=$(cat branch-name.txt)
-          tag=$(cat current-tag.txt)
+          branch=$(cat branch_name.txt)
+          tag=$(cat current_tag.txt)
           case $branch in
-            patch) echo $(semver --increment patch $tag) >> increment-tag.txt ;;
-            feature) echo $(semver --increment minor $tag) >> increment-tag.txt ;;
-            release) echo $(semver --increment major $tag) >> increment-tag.txt ;;
-            *) echo $tag >> increment-tag.txt ;;
+            patch) echo $(semver --increment patch $tag) >> increment_tag.txt ;;
+            feature) echo $(semver --increment minor $tag) >> increment_tag.txt ;;
+            release) echo $(semver --increment major $tag) >> increment_tag.txt ;;
+            *) echo $tag >> increment_tag.txt ;;
           esac
 
       - name: Create tag
         id: create-tag
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git tag $(cat increment-tag.txt)
-          git push origin $(cat increment-tag.txt)
+          git config --local user.email "valeryk@bynet.co.il"
+          git config --local user.name "ValeryKhirin"
+          git tag $(cat increment_tag.txt)
+          git push origin $(cat increment_tag.txt)
 
 
 
