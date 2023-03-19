@@ -24,8 +24,8 @@ jobs:
           tag=$(cat current_tag.txt)
           case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
             patch*) echo "$tag" | awk -F '\.' '{print $1 "." $2 "." $3+1}' > increment_tag.txt ;;
-            feature*) echo "$tag" | awk -F '\.' '{print $1 "." $2+1 "." $3}' > increment_tag.txt ;;
-            release*) echo "$tag" | awk -F '\.' '{print $1+1 "." $2 "." $3}' > increment_tag.txt ;;
+            feature*) echo "$tag" | awk -F '\.' '{print $1 "." $2+1 ".0"}' > increment_tag.txt ;;
+            release*) echo "$tag" | awk -F '\.' '{print $1+1".0.0"}' > increment_tag.txt ;;
             *) echo $tag > increment_tag.txt ;;
           esac
 
