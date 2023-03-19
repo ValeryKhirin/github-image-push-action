@@ -13,30 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Determine branch name
-        id: branch-name
-        run: |
-          case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
-            patch*) echo "patch" >> branch_name.txt ;;
-            feature*) echo "minor" >> branch_name.txt ;;
-            release*) echo "major" >> branch_name.txt ;;
-            *) echo "none" >> branch_name.txt ;;
-          esac
-
       - name: Determine current tag
         id: current-tag
         run: |
           curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}' >> current_tag.txt
 
-      - name: Increment tag based on branch name
-        id: increment-tag
+      - name: Determine branch name
+        id: branch-name
         run: |
-          branch=$(cat branch_name.txt)
           tag=$(cat current_tag.txt)
-          case $branch in
-            patch) echo "$tag" | awk -F '\.' '{print $1 "." $2 "." $3+1}' >> increment_tag.txt ;;
-            feature) echo "$tag" | awk -F '\.' '{print $1 "." $2+1 "." $3}' >> increment_tag.txt ;;
-            release) echo "$tag" | awk -F '\.' '{print $1+1 "." $2 "." $3}' >> increment_tag.txt ;;
+          case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
+            patch*) echo "$tag" | awk -F '\.' '{print $1 "." $2 "." $3+1}' >> increment_tag.txt ;;
+            feature*) echo "$tag" | awk -F '\.' '{print $1 "." $2+1 "." $3}' >> increment_tag.txt ;;
+            release*) echo "$tag" | awk -F '\.' '{print $1+1 "." $2 "." $3}' >> increment_tag.txt ;;
             *) echo $tag >> increment_tag.txt ;;
           esac
           cat increment_tag.txt
