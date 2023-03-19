@@ -23,7 +23,7 @@ jobs:
           esac
 
       - name: Print previous
-        run: echo "${steps.branch-name.outputs}"
+        run: echo "${steps.branch-name.outputs.name}"
 
       - name: Determine current tag
         id: current-tag
