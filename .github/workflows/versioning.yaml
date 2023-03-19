@@ -1,3 +1,72 @@
+name: Tag Version on Merge
+
+on:
+  push:
+    # branches:
+      # - main
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Determine branch name
+        id: branch-name
+        run: echo "::set-output name=name::${GITHUB_REF#refs/heads/}"
+
+      - name: Determine current tag
+        id: current-tag
+        run: |
+          if [[ $(git tag --points-at HEAD) ]]; then
+            echo "::set-output name=tag::$(git describe --tags --abbrev=0 --exact-match)"
+          else
+            echo "::set-output name=tag::0.0.0"
+          fi
+
+    # case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
+    #         patch*) echo "patch" ;;
+    #         feature*) echo "minor" ;;
+    #         release*) echo "major" ;;
+    #         *) echo "none" ;;
+    #       esac
+  
+  
+      - name: Increment tag based on branch name
+        id: increment-tag
+        run: |
+          case ${{ steps.branch-name.outputs.name }} in
+            patch/*)
+              echo "::set-output name=tag::$(semver --increment patch ${{ steps.current-tag.outputs.tag }})"
+              ;;
+            feature/*)
+              echo "::set-output name=tag::$(semver --increment minor ${{ steps.current-tag.outputs.tag }})"
+              ;;
+            release/*)
+              echo "::set-output name=tag::$(semver --increment major ${{ steps.current-tag.outputs.tag }})"
+              ;;
+            *)
+              echo "::set-output name=tag::${{ steps.current-tag.outputs.tag }}"
+              ;;
+          esac
+
+      - name: Create tag
+        if: ${{ steps.increment-tag.outputs.tag != steps.current-tag.outputs.tag }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag ${{ steps.increment-tag.outputs.tag }}
+          git push origin ${{ steps.increment-tag.outputs.tag }}
+
+
+
+
+
+
+
+
+
 # name: Versioning Workflow
 # on:
 #   pull_request:
@@ -15,70 +84,75 @@
 #         run: |
 #           git config --global user.email "valeryk@bynet.co.il"
 #           git config --global user.name "ValeryKhirin"
-
-#       - name: Determine version increment
-#         id: versiontype
+      
+#       - name: Check last tag
 #         run: |
-#           case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
-#             patch*) 
-#               uses: anothrNick/github-tag-action@1.36.0 
-#               env:
-#                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                 DEFAULT_BUMP: PATCH
-#                 INITIAL_VERSION: 0.0.0;;
-#             feature*)
-#               uses: anothrNick/github-tag-action@1.36.0 
-#               env:
-#                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                 DEFAULT_BUMP: MINOR
-#                 INITIAL_VERSION: 0.0.0;;
-#             release*)
-#               uses: anothrNick/github-tag-action@1.36.0 
-#               env:
-#                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                 DEFAULT_BUMP: PATCH
-#                 INITIAL_VERSION: 0.0.0;;
-#             *) echo "none" ;;
-#           esac
+          
 
-#       # - name: Print
-#       #   run: echo "${{ steps.versiontype.outputs.value }}"
 
-#       # - name: Inrease Patch
-#       #   id: patch
-#       #   if: ${{ steps.versiontype.outputs.value == 'patch' }}
-#       #   uses: anothrNick/github-tag-action@1.36.0 
-#       #   env:
-#       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       #     DEFAULT_BUMP: PATCH
-#       #     INITIAL_VERSION: 0.0.0
+      # - name: Determine version increment
+      #   id: versiontype
+      #   run: |
+      #     case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
+      #       patch*) 
+      #         uses: anothrNick/github-tag-action@1.36.0 
+      #         env:
+      #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #           DEFAULT_BUMP: PATCH
+      #           INITIAL_VERSION: 0.0.0;;
+      #       feature*)
+      #         uses: anothrNick/github-tag-action@1.36.0 
+      #         env:
+      #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #           DEFAULT_BUMP: MINOR
+      #           INITIAL_VERSION: 0.0.0;;
+      #       release*)
+      #         uses: anothrNick/github-tag-action@1.36.0 
+      #         env:
+      #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #           DEFAULT_BUMP: PATCH
+      #           INITIAL_VERSION: 0.0.0;;
+      #       *) echo "none" ;;
+      #     esac
 
-#       # - name: Increase Minor
-#       #   id: minor
-#       #   if: ${{steps.versiontype.outputs.value == 'minor' }}
-#       #   uses: anothrNick/github-tag-action@1.36.0 
-#       #   env:
-#       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       #     DEFAULT_BUMP: MINOR
-#       #     INITIAL_VERSION: 0.0.0
+      # - name: Print
+      #   run: echo "${{ steps.versiontype.outputs.value }}"
 
-#       # - name: Increase Major
-#       #   id: major
-#       #   if: ${{ steps.versiontype.outputs.value == 'major' }}
-#       #   uses: anothrNick/github-tag-action@1.36.0 
-#       #   env:
-#       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       #     DEFAULT_BUMP: MQAJOR
-#       #     INITIAL_VERSION: 0.0.0
+      # - name: Inrease Patch
+      #   id: patch
+      #   if: ${{ steps.versiontype.outputs.value == 'patch' }}
+      #   uses: anothrNick/github-tag-action@1.36.0 
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     DEFAULT_BUMP: PATCH
+      #     INITIAL_VERSION: 0.0.0
 
-#                 # Extract last tag
+      # - name: Increase Minor
+      #   id: minor
+      #   if: ${{steps.versiontype.outputs.value == 'minor' }}
+      #   uses: anothrNick/github-tag-action@1.36.0 
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     DEFAULT_BUMP: MINOR
+      #     INITIAL_VERSION: 0.0.0
 
-#           # Check if exists, if not ---> initialize 0.0.1
+      # - name: Increase Major
+      #   id: major
+      #   if: ${{ steps.versiontype.outputs.value == 'major' }}
+      #   uses: anothrNick/github-tag-action@1.36.0 
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     DEFAULT_BUMP: MQAJOR
+      #     INITIAL_VERSION: 0.0.0
 
-#           # If yes, determine change type
+                # Extract last tag
 
-#           # Increase version accordingly
+          # Check if exists, if not ---> initialize 0.0.1
 
-#           # Push release with GitHub release API
+          # If yes, determine change type
 
-#           # Store artifact 
+          # Increase version accordingly
+
+          # Push release with GitHub release API
+
+          # Store artifact 
