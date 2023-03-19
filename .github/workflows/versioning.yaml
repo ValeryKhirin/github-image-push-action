@@ -35,4 +35,6 @@ jobs:
           git config --local user.email "valeryk@bynet.co.il"
           git config --local user.name "ValeryKhirin"
           git tag $(cat increment_tag.txt)
-          git push origin $(cat increment_tag.txt)
+          git push origin $(cat increment_tag.txt
+
+#
