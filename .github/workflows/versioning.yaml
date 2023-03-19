@@ -16,7 +16,7 @@ jobs:
       - name: Determine current tag
         id: current-tag
         run: |
-          curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}' >> current_tag.txt
+          curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}' | sort -r | head -n1 >> current_tag.txt
 
       - name: Determine branch name
         id: branch-name
