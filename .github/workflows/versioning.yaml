@@ -27,34 +27,25 @@ jobs:
         run: |
           curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}' >> current_tag.txt
 
-      - name: Print previous
-        run: cat current_tag.txt
-
       - name: Increment tag based on branch name
         id: increment-tag
         run: |
-          case ${{ steps.branch-name.outputs.name }} in
-            patch)
-              echo "::set-output name=tag::$(semver --increment patch ${{ steps.current-tag.outputs.tag }})"
-              ;;
-            feature)
-              echo "::set-output name=tag::$(semver --increment minor ${{ steps.current-tag.outputs.tag }})"
-              ;;
-            release)
-              echo "::set-output name=tag::$(semver --increment major ${{ steps.current-tag.outputs.tag }})"
-              ;;
-            *)
-              echo "::set-output name=tag::${{ steps.current-tag.outputs.tag }}"
-              ;;
+          branch=$(cat branch-name.txt)
+          tag=$(cat current-tag.txt)
+          case $branch in
+            patch) echo $(semver --increment patch $tag) >> increment-tag.txt ;;
+            feature) echo $(semver --increment minor $tag) >> increment-tag.txt ;;
+            release) echo $(semver --increment major $tag) >> increment-tag.txt ;;
+            *) echo $tag >> increment-tag.txt ;;
           esac
 
       - name: Create tag
-        if: ${{ steps.increment-tag.outputs.tag != steps.current-tag.outputs.tag }}
+        id: create-tag
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag ${{ steps.increment-tag.outputs.tag }}
-          git push origin ${{ steps.increment-tag.outputs.tag }}
+          git tag $(cat increment-tag.txt)
+          git push origin $(cat increment-tag.txt)
 
 
 
