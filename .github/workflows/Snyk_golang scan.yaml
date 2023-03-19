@@ -25,4 +25,3 @@
 #       - name: Print json
 #         run: |
 #           cat snyk.jsons
-#
