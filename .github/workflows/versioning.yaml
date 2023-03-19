@@ -28,12 +28,10 @@ jobs:
             release*) echo "$tag" | awk -F '\.' '{print $1+1 "." $2 "." $3}' >> increment_tag.txt ;;
             *) echo $tag >> increment_tag.txt ;;
           esac
-          cat increment_tag.txt
 
       - name: Create tag
         id: create-tag
         run: |
-          cat increment_tag.txt
           git config --local user.email "valeryk@bynet.co.il"
           git config --local user.name "ValeryKhirin"
           git tag $(cat increment_tag.txt)
