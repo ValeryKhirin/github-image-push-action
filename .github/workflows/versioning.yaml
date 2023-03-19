@@ -1,84 +1,40 @@
-# name: Versioning Workflow
-# on:
-#   pull_request:
-#     types:
-#       - closed
+name: Tag Version on Merge
 
-# jobs:
-#   update_version:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+on:
+  push:
+    branches:
+      - main
 
-#       - name: Git Set Up
-#         run: |
-#           git config --global user.email "valeryk@bynet.co.il"
-#           git config --global user.name "ValeryKhirin"
+jobs:
+  tag:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#       - name: Determine version increment
-#         id: versiontype
-#         run: |
-#           case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
-#             patch*) 
-#               uses: anothrNick/github-tag-action@1.36.0 
-#               env:
-#                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                 DEFAULT_BUMP: PATCH
-#                 INITIAL_VERSION: 0.0.0;;
-#             feature*)
-#               uses: anothrNick/github-tag-action@1.36.0 
-#               env:
-#                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                 DEFAULT_BUMP: MINOR
-#                 INITIAL_VERSION: 0.0.0;;
-#             release*)
-#               uses: anothrNick/github-tag-action@1.36.0 
-#               env:
-#                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                 DEFAULT_BUMP: PATCH
-#                 INITIAL_VERSION: 0.0.0;;
-#             *) echo "none" ;;
-#           esac
+      - name: Determine current tag
+        id: current-tag
+        run: |
+          curl -s 'https://github.com/ValeryKhirin/github-image-push-action/tags/' | grep -Eo "tag/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | awk -F '\/' '{print $2}' >> current_tag.txt
 
-#       # - name: Print
-#       #   run: echo "${{ steps.versiontype.outputs.value }}"
+      - name: Determine branch name
+        id: branch-name
+        run: |
+          tag=$(cat current_tag.txt)
+          case "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" in
+            patch*) echo "$tag" | awk -F '\.' '{print $1 "." $2 "." $3+1}' >> increment_tag.txt ;;
+            feature*) echo "$tag" | awk -F '\.' '{print $1 "." $2+1 "." $3}' >> increment_tag.txt ;;
+            release*) echo "$tag" | awk -F '\.' '{print $1+1 "." $2 "." $3}' >> increment_tag.txt ;;
+            *) echo $tag >> increment_tag.txt ;;
+          esac
+          cat increment_tag.txt
 
-#       # - name: Inrease Patch
-#       #   id: patch
-#       #   if: ${{ steps.versiontype.outputs.value == 'patch' }}
-#       #   uses: anothrNick/github-tag-action@1.36.0 
-#       #   env:
-#       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       #     DEFAULT_BUMP: PATCH
-#       #     INITIAL_VERSION: 0.0.0
-
-#       # - name: Increase Minor
-#       #   id: minor
-#       #   if: ${{steps.versiontype.outputs.value == 'minor' }}
-#       #   uses: anothrNick/github-tag-action@1.36.0 
-#       #   env:
-#       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       #     DEFAULT_BUMP: MINOR
-#       #     INITIAL_VERSION: 0.0.0
-
-#       # - name: Increase Major
-#       #   id: major
-#       #   if: ${{ steps.versiontype.outputs.value == 'major' }}
-#       #   uses: anothrNick/github-tag-action@1.36.0 
-#       #   env:
-#       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       #     DEFAULT_BUMP: MQAJOR
-#       #     INITIAL_VERSION: 0.0.0
-
-#                 # Extract last tag
-
-#           # Check if exists, if not ---> initialize 0.0.1
-
-#           # If yes, determine change type
-
-#           # Increase version accordingly
-
-#           # Push release with GitHub release API
-
-#           # Store artifact 
+      - name: Create tag
+        id: create-tag
+        run: |
+          cat increment_tag.txt
+          git config --local user.email "valeryk@bynet.co.il"
+          git config --local user.name "ValeryKhirin"
+          git tag $(cat increment_tag.txt)
+          git push origin $(cat increment_tag.txt)
